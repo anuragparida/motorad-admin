@@ -1,10 +1,8 @@
 const Cookies = require("js-cookie");
 
 module.exports = {
-  // server: "https://api.rainproxy.io", //ONLY CHANGE THIS
-  // server: "https://api.raintesting.website",
-
-  server: "http://localhost:7400",
+  server: "https://api.emotorad.in", //ONLY CHANGE THIS
+  // server: "http://localhost:7400",
 
   SITE_KEY: "6LdaGssUAAAAAFMBwO3VPUNlV6pZE_uIY04zK8dh",
   // SITE_KEY: "6LeujOcUAAAAAE9w5ZajotAUJR6xbaCxj2fu1q59",

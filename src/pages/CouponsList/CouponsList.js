@@ -10,10 +10,11 @@ import { server, config, checkAccess } from "../../env";
 export default class CouponsList extends PureComponent {
   state = {
     coupons: [],
+    pager: {},
   };
 
   componentDidMount() {
-    this.readCoupons();
+    this.readCoupons("", 1);
   }
 
   readCoupons = async () => {
@@ -23,6 +24,7 @@ export default class CouponsList extends PureComponent {
         console.log(rsp);
         this.setState({
           coupons: rsp.data.payload,
+          pager: rsp.data.pager,
         });
       })
       .catch((err) => {
@@ -49,7 +51,10 @@ export default class CouponsList extends PureComponent {
                             Coupons List
                           </h3>
                           <div class="nk-block-des text-soft">
-                            <p>You have total 2,595 users.</p>
+                            <p>
+                              You have total {this.state.coupons.length}{" "}
+                              coupons.
+                            </p>
                           </div>
                         </div>
                         <div class="nk-block-head-content">
@@ -362,42 +367,29 @@ export default class CouponsList extends PureComponent {
                           <div class="card-inner p-0">
                             <div class="nk-tb-list nk-tb-ulist is-compact">
                               <div class="nk-tb-item nk-tb-head">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                  <div class="custom-control custom-control-sm custom-checkbox notext">
-                                    <input
-                                      id="uid"
-                                      class="custom-control-input"
-                                      type="checkbox"
-                                    />
-                                    <label
-                                      class="custom-control-label"
-                                      for="uid"
-                                    ></label>
-                                  </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Code</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Amount Left</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Total Amount</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Discount</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Discount Type</span>
                                 </div>
                                 <div class="nk-tb-col">
                                   <span class="sub-text">User</span>
                                 </div>
-                                <div class="nk-tb-col tb-col-md">
-                                  <span class="sub-text">Role</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm">
-                                  <span class="sub-text">Email</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-md">
-                                  <span class="sub-text">Phone</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">Company</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">Verified</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">Last Login</span>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Product</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Status</span>
+                                  <span class="sub-text">Accessories</span>
                                 </div>
                                 <div class="nk-tb-col nk-tb-col-tools text-right">
                                   <div class="dropdown">
@@ -471,11 +463,11 @@ export default class CouponsList extends PureComponent {
                                 </div>
                               </div>
                               {this.state.coupons.map((x, i) => (
-                                <CouponsListItem />
+                                <CouponsListItem data={x} />
                               ))}
                             </div>
                           </div>
-                          <Pagination />
+                          {/* <Pagination /> */}
                         </div>
                       </div>
                     </div>

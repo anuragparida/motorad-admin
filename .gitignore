@@ -11,6 +11,8 @@
 # production
 /build
 
+ssh.bat
+
 # misc
 .DS_Store
 .env.local

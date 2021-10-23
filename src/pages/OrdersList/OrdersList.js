@@ -10,15 +10,17 @@ import { server, config, checkAccess } from "../../env";
 export default class OrdersList extends PureComponent {
   state = {
     orders: [],
+    pager: {},
   };
 
   componentDidMount() {
-    this.readOrders();
+    this.readOrders("", 1);
   }
 
-  readOrders = async (search) => {
+  readOrders = async (search, pageNumber) => {
     const params = {
       search: search,
+      pageNumber: String(pageNumber),
     };
     await axios
       .post(server + "/api/order/read", params, config)
@@ -26,6 +28,7 @@ export default class OrdersList extends PureComponent {
         console.log(rsp);
         this.setState({
           orders: rsp.data.payload,
+          pager: rsp.data.pager,
         });
       })
       .catch((err) => {
@@ -50,7 +53,9 @@ export default class OrdersList extends PureComponent {
                         <div class="nk-block-head-content">
                           <h3 class="nk-block-title page-title">Orders List</h3>
                           <div class="nk-block-des text-soft">
-                            {/* <p>You have total 2,595 users.</p> */}
+                            <p>
+                              You have total {this.state.orders.length} orders.
+                            </p>
                           </div>
                         </div>
                         <div class="nk-block-head-content">
@@ -363,42 +368,35 @@ export default class OrdersList extends PureComponent {
                           <div class="card-inner p-0">
                             <div class="nk-tb-list nk-tb-ulist is-compact">
                               <div class="nk-tb-item nk-tb-head">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                  <div class="custom-control custom-control-sm custom-checkbox notext">
-                                    <input
-                                      id="uid"
-                                      class="custom-control-input"
-                                      type="checkbox"
-                                    />
-                                    <label
-                                      class="custom-control-label"
-                                      for="uid"
-                                    ></label>
-                                  </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Product Name</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Invoice ID</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">User ID</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-md">
-                                  <span class="sub-text">User</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm">
-                                  <span class="sub-text">Email</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Product</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-md">
                                   <span class="sub-text">Price</span>
                                 </div>
-                                <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">Payment Method</span>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Color</span>
                                 </div>
-                                <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">Purchase Date</span>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Type</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Coupon</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Discount</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Coupon Type</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Accessories</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Address</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Status</span>
                                 </div>
                                 <div class="nk-tb-col nk-tb-col-tools text-right">
                                   <div class="dropdown">
@@ -476,7 +474,7 @@ export default class OrdersList extends PureComponent {
                               ))}
                             </div>
                           </div>
-                          <Pagination />
+                          {/* <Pagination /> */}
                         </div>
                       </div>
                     </div>

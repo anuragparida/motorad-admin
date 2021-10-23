@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import Cookies from "js-cookie";
 
 const Header = () => (
   <div class="nk-header nk-header-fixed is-light">
@@ -215,61 +215,15 @@ const Header = () => (
               </div>
             </li>
             <li class="dropdown user-dropdown">
-              <div class="user-toggle">
-                <div class="user-avatar sm"> </div>
-                <div class="user-info d-none d-xl-block">
-                  <div class="user-status user-status-unverified">
-                    Unverified
-                  </div>
-                  <div class="user-name dropdown-indicator">
-                    Abu Bin Ishityak
-                  </div>
-                </div>
-              </div>
-              <div class=" dropdown-menu dropdown-menu-md dropdown-menu-right ">
-                <div class=" dropdown-inner user-card-wrap bg-lighter d-none d-md-block ">
-                  <div class="user-card">
-                    <div class="user-avatar">AB</div>
-                    <div class="user-info">
-                      <span class="lead-text">Abu Bin Ishtiyak</span>
-                      <span class="sub-text">info@softnio.com</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="dropdown-inner">
-                  <ul class="link-list">
-                    <li>
-                      <a href="html/user-profile-regular.html">
-                        <em class="icon ni ni-user-alt">View Profile</em>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="html/user-profile-setting.html">
-                        <em class="icon ni ni-setting-alt">Account Setting</em>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="html/user-profile-activity.html">
-                        <em class="icon ni ni-activity-alt">Login Activity</em>
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dark-switch" href="#">
-                        <em class="icon ni ni-moon">Dark Mode</em>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="dropdown-inner">
-                  <ul class="link-list">
-                    <li>
-                      <a href="#">
-                        <em class="icon ni ni-signout">Sign out</em>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              <a
+                href="javascript:void(0)"
+                onClick={() => {
+                  Cookies.remove("token");
+                  window.location.href = "/login";
+                }}
+              >
+                <em class="icon ni ni-signout"> Logout</em>
+              </a>
             </li>
           </ul>
         </div>

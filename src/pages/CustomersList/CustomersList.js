@@ -12,15 +12,17 @@ import Header from "../../components/Header/Header";
 export default class CustomersList extends PureComponent {
   state = {
     customers: [],
+    pager: {},
   };
 
   componentDidMount() {
-    this.readCustomers();
+    this.readCustomers("", 1);
   }
 
-  readCustomers = async (search) => {
+  readCustomers = async (search, pageNumber) => {
     const params = {
       search: search,
+      pageNumber: String(pageNumber),
     };
     await axios
       .post(server + "/api/admin/read-users", params, config)
@@ -28,6 +30,7 @@ export default class CustomersList extends PureComponent {
         console.log(rsp);
         this.setState({
           customers: rsp.data.payload,
+          pager: rsp.data.pager,
         });
       })
       .catch((err) => {
@@ -52,7 +55,10 @@ export default class CustomersList extends PureComponent {
                         <div class="nk-block-head-content">
                           <h3 class="nk-block-title page-title">Users Lists</h3>
                           <div class="nk-block-des text-soft">
-                            <p>You have total 2,595 users.</p>
+                            <p>
+                              You have total {this.state.pager.totalRecords}{" "}
+                              users.
+                            </p>
                           </div>
                         </div>
                         <div class="nk-block-head-content">
@@ -365,7 +371,7 @@ export default class CustomersList extends PureComponent {
                           <div class="card-inner p-0">
                             <div class="nk-tb-list nk-tb-ulist is-compact">
                               <div class="nk-tb-item nk-tb-head">
-                                <div class="nk-tb-col nk-tb-col-check">
+                                {/* <div class="nk-tb-col nk-tb-col-check">
                                   <div class="custom-control custom-control-sm custom-checkbox notext">
                                     <input
                                       id="uid"
@@ -377,12 +383,9 @@ export default class CustomersList extends PureComponent {
                                       for="uid"
                                     ></label>
                                   </div>
-                                </div>
+                                </div> */}
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">User</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-md">
-                                  <span class="sub-text">Role</span>
+                                  <span class="sub-text">User Name</span>
                                 </div>
                                 <div class="nk-tb-col tb-col-sm">
                                   <span class="sub-text">Email</span>
@@ -391,13 +394,10 @@ export default class CustomersList extends PureComponent {
                                   <span class="sub-text">Phone</span>
                                 </div>
                                 <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">Company</span>
+                                  <span class="sub-text">Paid</span>
                                 </div>
                                 <div class="nk-tb-col tb-col-lg">
                                   <span class="sub-text">Verified</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-lg">
-                                  <span class="sub-text">Last Login</span>
                                 </div>
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Status</span>
@@ -474,11 +474,14 @@ export default class CustomersList extends PureComponent {
                                 </div>
                               </div>
                               {this.state.customers.map((x, i) => (
-                                <CustomerListItem />
+                                <CustomerListItem data={x} />
                               ))}
                             </div>
                           </div>
-                          <Pagination />
+                          <Pagination
+                            data={this.state.pager}
+                            func={(page) => this.readCustomers("", page)}
+                          />
                         </div>
                       </div>
                     </div>
