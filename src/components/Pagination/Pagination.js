@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const Pagination = (props) => {
   const data = props.data;
-  const func = props.func;
+  // const func = props.func;
   console.log(data);
   const totalPages = data.totalRecords ? Math.ceil(data.totalRecords / 10) : 1;
   return (
@@ -16,11 +16,11 @@ const Pagination = (props) => {
                 <a
                   class="page-link"
                   href="javascript:void(0)"
-                  onClick={
-                    data.pageNumber !== 1
-                      ? () => func(data.pageNumber - 1)
-                      : () => console.log("nope")
-                  }
+                  // onClick={
+                  //   data.pageNumber !== 1
+                  //     ? () => func(data.pageNumber - 1)
+                  //     : () => console.log("nope")
+                  // }
                 >
                   Prev
                 </a>
@@ -34,11 +34,11 @@ const Pagination = (props) => {
                 <a
                   class="page-link"
                   href="javascript:void(0)"
-                  onClick={
-                    data.pageNumber !== totalPages
-                      ? () => func(data.pageNumber + 1)
-                      : () => console.log("nope")
-                  }
+                  // onClick={
+                  //   data.pageNumber !== totalPages
+                  //     ? () => func(data.pageNumber + 1)
+                  //     : () => console.log("nope")
+                  // }
                 >
                   Next
                 </a>
@@ -59,9 +59,7 @@ const Pagination = (props) => {
                   {data.totalRecords &&
                     [...new Array(Math.max(totalPages, 1))].map((_, index) =>
                       index === data.pageNumber ? (
-                        <option value={index + 1} selected>
-                          {index + 1}
-                        </option>
+                        <option value={index + 1}>{index + 1}</option>
                       ) : (
                         <option value={index + 1}>{index + 1}</option>
                       )

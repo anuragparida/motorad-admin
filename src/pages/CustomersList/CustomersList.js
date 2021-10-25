@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { PureComponent } from "react";
 import axios from "axios";
 import { server, config, checkAccess } from "../../env";
@@ -12,6 +13,10 @@ import Header from "../../components/Header/Header";
 export default class CustomersList extends PureComponent {
   state = {
     customers: [],
+    search: "",
+    pageNumber: 1,
+    sortBy: "id",
+    sortOrder: "desc",
     pager: {},
   };
 
@@ -19,10 +24,21 @@ export default class CustomersList extends PureComponent {
     this.readCustomers("", 1);
   }
 
-  readCustomers = async (search, pageNumber) => {
+  componentDidUpdate() {
+    this.readCustomers(
+      this.state.search,
+      this.state.pageNumber,
+      this.state.sortBy,
+      this.state.sortOrder
+    );
+  }
+
+  readCustomers = async (search, pageNumber, sortBy, sortOrder) => {
     const params = {
       search: search,
       pageNumber: String(pageNumber),
+      sortBy: sortBy,
+      sortOrder: sortOrder,
     };
     await axios
       .post(server + "/api/admin/read-users", params, config)
@@ -61,42 +77,6 @@ export default class CustomersList extends PureComponent {
                             </p>
                           </div>
                         </div>
-                        <div class="nk-block-head-content">
-                          <div class="toggle-wrap nk-block-tools-toggle">
-                            <div
-                              class="toggle-expand-content"
-                              data-content="pageMenu"
-                            >
-                              <ul class="nk-block-tools g-3">
-                                <li>
-                                  <a
-                                    class="btn btn-white btn-outline-light"
-                                    href="#"
-                                  >
-                                    Export
-                                  </a>
-                                </li>
-                                <li class="nk-block-tools-opt">
-                                  <div class="drodown">
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                      <ul class="link-list-opt no-bdr">
-                                        <li>
-                                          <a href="#">Add User</a>
-                                        </li>
-                                        <li>
-                                          <a href="#">Add Team</a>
-                                        </li>
-                                        <li>
-                                          <a href="#">Import User</a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </div>
                     <div class="nk-block">
@@ -106,49 +86,28 @@ export default class CustomersList extends PureComponent {
                             <div class="card-title-group">
                               <div class="card-tools">
                                 <div class="form-inline flex-nowrap gx-3">
-                                  <div class="form-wrap w-150px">
-                                    <select
-                                      class="form-select form-select-sm"
-                                      data-search="off"
-                                      data-placeholder="Bulk Action"
-                                    >
-                                      <option value="">Bulk Action</option>
-                                      <option value="email">Send Email</option>
-                                      <option value="group">
-                                        Change Group
-                                      </option>
-                                      <option value="suspend">
-                                        Suspend User
-                                      </option>
-                                      <option value="delete">
-                                        Delete User
-                                      </option>
-                                    </select>
-                                  </div>
-                                  <div class="btn-wrap">
-                                    <span class="d-none d-md-block">
-                                      <button class="btn btn-dim btn-outline-light disabled">
-                                        Apply
-                                      </button>
-                                    </span>
-                                    <span class="d-md-none">
-                                      <button class="btn btn-dim btn-outline-light btn-icon disabled">
-                                        <em class="icon ni ni-arrow-right"></em>
-                                      </button>
-                                    </span>
-                                  </div>
+                                  <div class="form-wrap w-150px"></div>
                                 </div>
                               </div>
                               <div class="card-tools mr-n1">
                                 <ul class="btn-toolbar gx-1">
                                   <li>
-                                    <a
-                                      href="#"
-                                      class="btn btn-icon search-toggle toggle-search"
-                                      data-target="search"
-                                    >
-                                      <em class="icon ni ni-search"></em>
-                                    </a>
+                                    <div class="form-group">
+                                      <div class="form-control-wrap">
+                                        <input
+                                          type="text"
+                                          class="form-control"
+                                          id="default-01"
+                                          placeholder="Search"
+                                          value={this.state.search}
+                                          onChange={(e) =>
+                                            this.setState({
+                                              search: e.target.value,
+                                            })
+                                          }
+                                        />
+                                      </div>
+                                    </div>
                                   </li>
                                   <li class="btn-toolbar-sep"></li>
                                   <li>
@@ -175,166 +134,80 @@ export default class CustomersList extends PureComponent {
                                             </a>
                                           </li>
                                           <li>
-                                            <div class="dropdown">
-                                              <a
-                                                href="#"
-                                                class="btn btn-trigger btn-icon dropdown-toggle"
-                                                data-toggle="dropdown"
-                                              >
-                                                <div class="dot dot-primary"></div>
-                                                <em class="icon ni ni-filter-alt"></em>
-                                              </a>
-                                              <div class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-right">
-                                                <div class="dropdown-head">
-                                                  <span class="sub-title dropdown-title">
-                                                    Filter Users
-                                                  </span>
-                                                  <div class="dropdown">
-                                                    <a
-                                                      href="#"
-                                                      class="btn btn-sm btn-icon"
-                                                    >
-                                                      <em class="icon ni ni-more-h"></em>
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                                <div class="dropdown-body dropdown-body-rg">
-                                                  <div class="row gx-6 gy-3">
-                                                    <div class="col-6">
-                                                      <div class="custom-control custom-control-sm custom-checkbox">
-                                                        <input
-                                                          type="checkbox"
-                                                          class="custom-control-input"
-                                                          id="hasBalance"
-                                                        />
-                                                        <label
-                                                          class="custom-control-label"
-                                                          for="hasBalance"
-                                                        >
-                                                          {" "}
-                                                          Have Balance
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                      <div class="custom-control custom-control-sm custom-checkbox">
-                                                        <input
-                                                          type="checkbox"
-                                                          class="custom-control-input"
-                                                          id="hasKYC"
-                                                        />
-                                                        <label
-                                                          class="custom-control-label"
-                                                          for="hasKYC"
-                                                        >
-                                                          {" "}
-                                                          KYC Verified
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                      <div class="form-group">
-                                                        <label class="overline-title overline-title-alt">
-                                                          Role
-                                                        </label>
-                                                        <select class="form-select form-select-sm">
-                                                          <option value="any">
-                                                            Any Role
-                                                          </option>
-                                                          <option value="investor">
-                                                            Investor
-                                                          </option>
-                                                          <option value="seller">
-                                                            Seller
-                                                          </option>
-                                                          <option value="buyer">
-                                                            Buyer
-                                                          </option>
-                                                        </select>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                      <div class="form-group">
-                                                        <label class="overline-title overline-title-alt">
-                                                          Status
-                                                        </label>
-                                                        <select class="form-select form-select-sm">
-                                                          <option value="any">
-                                                            Any Status
-                                                          </option>
-                                                          <option value="active">
-                                                            Active
-                                                          </option>
-                                                          <option value="pending">
-                                                            Pending
-                                                          </option>
-                                                          <option value="suspend">
-                                                            Suspend
-                                                          </option>
-                                                          <option value="deleted">
-                                                            Deleted
-                                                          </option>
-                                                        </select>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                      <div class="form-group">
-                                                        <button
-                                                          type="button"
-                                                          class="btn btn-secondary"
-                                                        >
-                                                          Filter
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="dropdown-foot between">
-                                                  <a class="clickable" href="#">
-                                                    Reset Filter
-                                                  </a>
-                                                  <a href="#">Save Filter</a>
-                                                </div>
-                                              </div>
-                                            </div>
+                                            <a
+                                              href="#"
+                                              class={
+                                                this.state.sortBy === "id"
+                                                  ? this.state.sortOrder ===
+                                                    "asc"
+                                                    ? "btn btn-success"
+                                                    : "btn btn-warning"
+                                                  : "btn btn-secondary"
+                                              }
+                                              onClick={() => {
+                                                this.setState({
+                                                  sortBy: "id",
+                                                  sortOrder:
+                                                    this.state.sortOrder ===
+                                                    "desc"
+                                                      ? "asc"
+                                                      : "desc",
+                                                });
+                                              }}
+                                            >
+                                              Sort: ID
+                                            </a>
                                           </li>
                                           <li>
-                                            <div class="dropdown">
-                                              <a
-                                                href="#"
-                                                class="btn btn-trigger btn-icon dropdown-toggle"
-                                                data-toggle="dropdown"
-                                              >
-                                                <em class="icon ni ni-setting"></em>
-                                              </a>
-                                              <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
-                                                <ul class="link-check">
-                                                  <li>
-                                                    <span>Show</span>
-                                                  </li>
-                                                  <li class="active">
-                                                    <a href="#">10</a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">20</a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">50</a>
-                                                  </li>
-                                                </ul>
-                                                <ul class="link-check">
-                                                  <li>
-                                                    <span>Order</span>
-                                                  </li>
-                                                  <li class="active">
-                                                    <a href="#">DESC</a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">ASC</a>
-                                                  </li>
-                                                </ul>
-                                              </div>
-                                            </div>
+                                            <a
+                                              href="#"
+                                              class={
+                                                this.state.sortBy === "isPaid"
+                                                  ? this.state.sortOrder ===
+                                                    "asc"
+                                                    ? "btn btn-success"
+                                                    : "btn btn-warning"
+                                                  : "btn btn-secondary"
+                                              }
+                                              onClick={() => {
+                                                this.setState({
+                                                  sortBy: "isPaid",
+                                                  sortOrder:
+                                                    this.state.sortOrder ===
+                                                    "desc"
+                                                      ? "asc"
+                                                      : "desc",
+                                                });
+                                              }}
+                                            >
+                                              Sort: isPaid
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class={
+                                                this.state.sortBy ===
+                                                "is_active"
+                                                  ? this.state.sortOrder ===
+                                                    "asc"
+                                                    ? "btn btn-success"
+                                                    : "btn btn-warning"
+                                                  : "btn btn-secondary"
+                                              }
+                                              onClick={() => {
+                                                this.setState({
+                                                  sortBy: "is_active",
+                                                  sortOrder:
+                                                    this.state.sortOrder ===
+                                                    "desc"
+                                                      ? "asc"
+                                                      : "desc",
+                                                });
+                                              }}
+                                            >
+                                              Sort: isActive
+                                            </a>
                                           </li>
                                         </ul>
                                       </div>
@@ -478,10 +351,10 @@ export default class CustomersList extends PureComponent {
                               ))}
                             </div>
                           </div>
-                          <Pagination
+                          {/* <Pagination
                             data={this.state.pager}
                             func={(page) => this.readCustomers("", page)}
-                          />
+                          /> */}
                         </div>
                       </div>
                     </div>
