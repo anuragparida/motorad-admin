@@ -2,48 +2,51 @@ import React from "react";
 
 const OrdersListItem = (props) => {
   const data = props.data;
+  const specData = props.specData;
+  const editData = props.editData;
   return (
     <div class="nk-tb-item">
-      <div class="nk-tb-col">{data.name}</div>
+      <div class="nk-tb-col">{data.id}</div>
+      <div class="nk-tb-col">{specData.name}</div>
       <div class="nk-tb-col">{data.price}</div>
-      <div class="nk-tb-col">{data.color}</div>
-      <div class="nk-tb-col">{data.type}</div>
-      <div class="nk-tb-col">{data.coupon}</div>
-      <div class="nk-tb-col">{data.discount}</div>
-      <div class="nk-tb-col">{data.coupon_type}</div>
-      <div class="nk-tb-col">{data.accessories}</div>
-      <div class="nk-tb-col">{data.address}</div>
+      <div class="nk-tb-col">{specData.color}</div>
+      <div class="nk-tb-col">{data.coupon || "None"}</div>
+      <div class="nk-tb-col">{data.discount || "None"}</div>
+      <div class="nk-tb-col">{data.coupon_type || "None"}</div>
+      <div class="nk-tb-col">
+        {data.address.address +
+          data.address.city +
+          data.address.state +
+          data.address.pin}
+      </div>
+      <div class="nk-tb-col">{data.tracking}</div>
+      <div class="nk-tb-col">{data.career}</div>
+      <div class="nk-tb-col">{data.frame_number}</div>
+      <div class="nk-tb-col">{data.date_of_delivery}</div>
       <div class="nk-tb-col">{data.status}</div>
-      <div class="nk-tb-col nk-tb-col-tools">
-        <ul class="nk-tb-actions gx-2">
-          <li class="nk-tb-action-hidden"></li>
-          <li class="nk-tb-action-hidden"></li>
-          <li class="nk-tb-action-hidden"></li>
-          <li>
-            <div class="drodown">
-              <div class="dropdown-menu dropdown-menu-right">
-                <ul class="link-list-opt no-bdr">
-                  <li>
-                    <a href="#">View Details</a>
-                  </li>
-                  <li>
-                    <a href="#">Orders</a>
-                  </li>
-                  <li class="divider"></li>
-                  <li>
-                    <a href="#">Reset Pass</a>
-                  </li>
-                  <li>
-                    <a href="#">Reset 2FA</a>
-                  </li>
-                  <li>
-                    <a href="#">Suspend User</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-        </ul>
+      <div class="nk-tb-col">
+        <a
+          href="javascript:void(0)"
+          class="btn btn-warning"
+          data-toggle="modal"
+          data-target="#exampleModalLong"
+          onClick={() => {
+            editData.func();
+          }}
+        >
+          Update
+        </a>
+      </div>
+      <div class="nk-tb-col">
+        <a
+          href="javascript:void(0)"
+          class="btn btn-success"
+          onClick={() => {
+            editData.func2();
+          }}
+        >
+          Download
+        </a>
       </div>
     </div>
   );

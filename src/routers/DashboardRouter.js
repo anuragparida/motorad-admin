@@ -18,6 +18,7 @@ import OrdersList from "./../pages/OrdersList/OrdersList";
 import ProductsList from "./../pages/ProductsList/ProductsList";
 import CouponsList from "./../pages/CouponsList/CouponsList";
 import Dashboard from "./../pages/Dashboard/Dashboard";
+import FormsList from "./../pages/FormsList/FormsList";
 
 export default function DashboardRouter() {
   return (
@@ -35,6 +36,7 @@ export default function DashboardRouter() {
       <Route path="/orders" component={OrdersList} />
       <Route path="/products" component={ProductsList} />
       <Route path="/coupons" component={CouponsList} />
+      <Route path="/forms" component={FormsList} />
       <Route path="/" component={Dashboard} />
     </Switch>
   );

@@ -1,35 +1,40 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { PureComponent } from "react";
-import Sidebar from "./../../components/Sidebar";
-import Header from "./../../components/Header/Header";
-import Footer from "./../../components/Footer/Footer";
-import OrdersListItem from "./../../components/OrdersListItem/OrdersListItem";
 import axios from "axios";
 import { server, config, checkAccess } from "../../env";
 
-export default class OrdersList extends PureComponent {
+// Components
+import Sidebar from "../../components/Sidebar";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import FormsListItem from "../../components/FormsListItem/FormsListItem";
+
+export default class FormsList extends PureComponent {
   state = {
-    orders: [],
+    customers: [],
     search: "",
     pageNumber: 1,
     sortBy: "id",
     sortOrder: "desc",
     pager: {},
-    editId: "",
+    type: "contact",
   };
 
   componentDidMount() {
-    this.readOrders("", 1);
+    this.readCustomers("contact", "", 1);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (
+      this.state.type === prevState.type &&
       this.state.search === prevState.search &&
       this.state.pageNumber === prevState.pageNumber &&
       this.state.sortBy === prevState.sortBy &&
       this.state.sortOrder === prevState.sortOrder
     )
       return;
-    this.readOrders(
+    this.readCustomers(
+      this.state.type,
       this.state.search,
       this.state.pageNumber,
       this.state.sortBy,
@@ -37,68 +42,45 @@ export default class OrdersList extends PureComponent {
     );
   }
 
-  readOrders = async (search, pageNumber, sortBy, sortOrder) => {
+  readCustomers = async (type, search, pageNumber, sortBy, sortOrder) => {
     const params = {
       search: search,
       pageNumber: String(pageNumber),
       sortBy: sortBy,
       sortOrder: sortOrder,
     };
+    let url = "";
+    if (type === "contact") {
+      url = "/api/contact/read";
+    } else if (type === "ride") {
+      url = "/api/ride/read";
+    } else if (type === "emi") {
+      url = "/api/emi/contact/read";
+    } else if (type === "warranty") {
+      url = "/api/warranty/read";
+    } else if (type === "community") {
+      url = "/api/community/read";
+    } else if (type === "partner") {
+      url = "/api/partner/read";
+    } else if (type === "rsa") {
+      url = "/api/rsa/read";
+      params.type = "rsa";
+    } else if (type === "insurance") {
+      url = "/api/rsa/read";
+      params.type = "insurance";
+    }
     await axios
-      .post(server + "/api/order/read", params, config)
+      .post(server + url, params, config)
       .then((rsp) => {
         console.log(rsp);
         this.setState({
-          orders: rsp.data.payload,
+          customers: rsp.data.payload,
           pager: rsp.data.pager,
         });
       })
       .catch((err) => {
         checkAccess(err);
         console.error(err);
-      });
-  };
-
-  editOrderDelivery = async (e) => {
-    e.preventDefault();
-
-    var params = Array.from(e.target.elements)
-      .filter((el) => el.name)
-      .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
-
-    axios
-      .put(
-        server + `/api/order/update-delivery/${this.state.editId}`,
-        params,
-        config
-      )
-      .then((rsp) => {
-        console.log(rsp);
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log(err.response);
-        if (err.response) {
-        }
-      });
-  };
-
-  getInvoice = async (id) => {
-    axios
-      .get(server + `/api/order/download-invoice/${id}`, config)
-      .then((rsp) => {
-        console.log(rsp);
-        let link = document.createElement("a");
-        link.href = "https://api.emotorad.in" + rsp.data.payload;
-        link.setAttribute("target", "_blank");
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      })
-      .catch((err) => {
-        console.log(err.response);
-        if (err.response) {
-        }
       });
   };
 
@@ -116,30 +98,12 @@ export default class OrdersList extends PureComponent {
                     <div class="nk-block-head nk-block-head-sm">
                       <div class="nk-block-between">
                         <div class="nk-block-head-content">
-                          <h3 class="nk-block-title page-title">Orders List</h3>
+                          <h3 class="nk-block-title page-title">Forms Lists</h3>
                           <div class="nk-block-des text-soft">
                             <p>
-                              You have total {this.state.orders.length} orders.
+                              You have total {this.state.pager.totalRecords}{" "}
+                              {this.state.type} records.
                             </p>
-                          </div>
-                        </div>
-                        <div class="nk-block-head-content">
-                          <div class="toggle-wrap nk-block-tools-toggle">
-                            <div
-                              class="toggle-expand-content"
-                              data-content="pageMenu"
-                            >
-                              <ul class="nk-block-tools g-3">
-                                {/* <li>
-                                  <a
-                                    class="btn btn-white btn-outline-light"
-                                    href="#"
-                                  >
-                                    Export
-                                  </a>
-                                </li> */}
-                              </ul>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -150,9 +114,177 @@ export default class OrdersList extends PureComponent {
                           <div class="card-inner position-relative card-tools-toggle">
                             <div class="card-title-group">
                               <div class="card-tools">
-                                <div class="form-inline flex-nowrap gx-3">
-                                  <div class="form-wrap w-150px"></div>
-                                </div>
+                                <ul class="btn-toolbar gx-1">
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "contact"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "contact",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      Contact
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "ride"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "ride",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      Rides
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "emi"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "emi",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      EMI
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "warranty"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "warranty",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      Warranty
+                                    </a>
+                                  </li>
+
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "community"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "community",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      Community
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "partner"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "partner",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      Partner
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "rsa"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "rsa",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      RSA
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a
+                                      href="#"
+                                      class={
+                                        this.state.type === "insurance"
+                                          ? "btn btn-success"
+                                          : "btn btn-secondary"
+                                      }
+                                      onClick={() => {
+                                        this.setState({
+                                          type: "insurance",
+                                          search: "",
+                                          pageNumber: 1,
+                                          sortBy: "id",
+                                          sortOrder: "desc",
+                                        });
+                                      }}
+                                    >
+                                      Insurance
+                                    </a>
+                                  </li>
+                                </ul>
                               </div>
                               <div class="card-tools mr-n1">
                                 <ul class="btn-toolbar gx-1">
@@ -198,7 +330,8 @@ export default class OrdersList extends PureComponent {
                                               <em class="icon ni ni-arrow-left"></em>
                                             </a>
                                           </li>
-                                          <li>
+
+                                          {/* <li>
                                             <a
                                               href="#"
                                               class={
@@ -227,7 +360,7 @@ export default class OrdersList extends PureComponent {
                                             <a
                                               href="#"
                                               class={
-                                                this.state.sortBy === "product"
+                                                this.state.sortBy === "isPaid"
                                                   ? this.state.sortOrder ===
                                                     "asc"
                                                     ? "btn btn-success"
@@ -236,7 +369,7 @@ export default class OrdersList extends PureComponent {
                                               }
                                               onClick={() => {
                                                 this.setState({
-                                                  sortBy: "products",
+                                                  sortBy: "isPaid",
                                                   sortOrder:
                                                     this.state.sortOrder ===
                                                     "desc"
@@ -245,9 +378,35 @@ export default class OrdersList extends PureComponent {
                                                 });
                                               }}
                                             >
-                                              Sort: Product Name
+                                              Sort: isPaid
                                             </a>
                                           </li>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class={
+                                                this.state.sortBy ===
+                                                "is_active"
+                                                  ? this.state.sortOrder ===
+                                                    "asc"
+                                                    ? "btn btn-success"
+                                                    : "btn btn-warning"
+                                                  : "btn btn-secondary"
+                                              }
+                                              onClick={() => {
+                                                this.setState({
+                                                  sortBy: "is_active",
+                                                  sortOrder:
+                                                    this.state.sortOrder ===
+                                                    "desc"
+                                                      ? "asc"
+                                                      : "desc",
+                                                });
+                                              }}
+                                            >
+                                              Sort: isActive
+                                            </a>
+                                          </li> */}
                                         </ul>
                                       </div>
                                     </div>
@@ -283,80 +442,21 @@ export default class OrdersList extends PureComponent {
                           <div class="card-inner p-0">
                             <div class="nk-tb-list nk-tb-ulist is-compact">
                               <div class="nk-tb-item nk-tb-head">
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Order ID</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Product Name</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Total Price</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Color</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Coupon</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Discount</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Coupon Type</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Address</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Tracking Number</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Carrier</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Frame Number</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Date of Delivery</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Status</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Update Delivery</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Download Invoice</span>
-                                </div>
+                                {this.state.customers.length > 0 &&
+                                  Object.keys(this.state.customers[0]).map(
+                                    (key, index) => (
+                                      <div class="nk-tb-col">
+                                        <span class="sub-text">{key}</span>
+                                      </div>
+                                    )
+                                  )}
                               </div>
-                              {this.state.orders.map((x, i) => (
-                                <>
-                                  {x.products.map((y, i2) => (
-                                    <OrdersListItem
-                                      data={x}
-                                      specData={y}
-                                      editData={{
-                                        func: () =>
-                                          this.setState({ editId: x.id }),
-                                        func2: () => this.getInvoice(x.id),
-                                      }}
-                                    />
-                                  ))}
-                                  {x.accessories.map((y, i2) => (
-                                    <OrdersListItem
-                                      data={x}
-                                      specData={y}
-                                      editData={{
-                                        func: () =>
-                                          this.setState({ editId: x.id }),
-                                        func2: () => this.getInvoice(x.id),
-                                      }}
-                                    />
-                                  ))}
-                                </>
+                              {this.state.customers.map((x, i) => (
+                                <FormsListItem data={x} />
                               ))}
                             </div>
                           </div>
+
                           <div class="card">
                             <div class="card-inner">
                               <div class="nk-block-between-md g-3">
@@ -475,74 +575,9 @@ export default class OrdersList extends PureComponent {
                 </div>
               </div>
             </div>
-
             <Footer />
           </div>
         </div>
-        <section class="modal_section_2">
-          <div
-            class="modal fade"
-            id="exampleModalLong"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="exampleModalLongTitle"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <form onSubmit={this.editOrderDelivery}>
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div class="form-group">
-                          <label for="">Tracking Number</label>
-                          <input
-                            type="text"
-                            name="tracking"
-                            class="form-control"
-                            placeholder="Tracking"
-                          ></input>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Carrier</label>
-                          <input
-                            type="text"
-                            name="career"
-                            class="form-control"
-                            placeholder="Carrier"
-                          ></input>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Date of Delivery</label>
-                          <input
-                            type="date"
-                            name="date_of_delivery"
-                            class="form-control"
-                            placeholder="Date of Delivery"
-                          ></input>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Frame Number</label>
-                          <input
-                            type="text"
-                            name="frame_number"
-                            class="form-control"
-                            placeholder="Frame Number"
-                          ></input>
-                        </div>
-                      </div>
-                      <div class="col-lg-12">
-                        <button type="submit" class="btn btn-success my-2">
-                          Submit
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </div>
     );
   }

@@ -91,7 +91,6 @@ export default class Sidebar extends PureComponent {
                       <em class="icon ni ni-bag"></em>
                     </span>
                     <span class="nk-menu-text">Home</span>
-                    <span class="nk-menu-badge badge-danger">HOT</span>
                   </Link>
                 </li>
                 <li class="nk-menu-heading">
@@ -174,6 +173,26 @@ export default class Sidebar extends PureComponent {
                       <em class="icon ni ni-growth-fill"></em>
                     </span>
                     <span class="nk-menu-text">Coupons</span>
+                  </Link>
+                </li>
+                <li class="nk-menu-item">
+                  <Link
+                    to="/forms"
+                    className={
+                      tab === "forms"
+                        ? "nk-menu-link active current-page"
+                        : "nk-menu-link"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tab: "forms",
+                      })
+                    }
+                  >
+                    <span class="nk-menu-icon">
+                      <em class="icon ni ni-growth-fill"></em>
+                    </span>
+                    <span class="nk-menu-text">Forms</span>
                   </Link>
                 </li>
                 <li class="nk-menu-heading">

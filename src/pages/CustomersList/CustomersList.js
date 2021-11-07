@@ -7,7 +7,6 @@ import { server, config, checkAccess } from "../../env";
 import Sidebar from "../../components/Sidebar";
 import CustomerListItem from "../../components/CustomerListItem/CustomerListItem";
 import Footer from "../../components/Footer/Footer";
-import Pagination from "../../components/Pagination/Pagination";
 import Header from "../../components/Header/Header";
 
 export default class CustomersList extends PureComponent {
@@ -24,7 +23,14 @@ export default class CustomersList extends PureComponent {
     this.readCustomers("", 1);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.state.search === prevState.search &&
+      this.state.pageNumber === prevState.pageNumber &&
+      this.state.sortBy === prevState.sortBy &&
+      this.state.sortOrder === prevState.sortOrder
+    )
+      return;
     this.readCustomers(
       this.state.search,
       this.state.pageNumber,
@@ -275,86 +281,124 @@ export default class CustomersList extends PureComponent {
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Status</span>
                                 </div>
-                                <div class="nk-tb-col nk-tb-col-tools text-right">
-                                  <div class="dropdown">
-                                    <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
-                                      <ul class="link-tidy sm no-bdr">
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="bl"
-                                              class="custom-control-input"
-                                              checked="checked"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="bl"
-                                            >
-                                              Balance
-                                            </label>
-                                          </div>
-                                        </li>
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="ph"
-                                              class="custom-control-input"
-                                              checked="checked"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="ph"
-                                            >
-                                              Phone
-                                            </label>
-                                          </div>
-                                        </li>
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="vri"
-                                              class="custom-control-input"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="vri"
-                                            >
-                                              Verified
-                                            </label>
-                                          </div>
-                                        </li>
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="st"
-                                              class="custom-control-input"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="st"
-                                            >
-                                              Status
-                                            </label>
-                                          </div>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                </div>
                               </div>
                               {this.state.customers.map((x, i) => (
                                 <CustomerListItem data={x} />
                               ))}
                             </div>
                           </div>
-                          {/* <Pagination
-                            data={this.state.pager}
-                            func={(page) => this.readCustomers("", page)}
-                          /> */}
+
+                          <div class="card">
+                            <div class="card-inner">
+                              <div class="nk-block-between-md g-3">
+                                <div class="g">
+                                  <ul class=" pagination justify-content-center justify-content-md-start ">
+                                    <li class="page-item">
+                                      <a
+                                        class="page-link"
+                                        href="javascript:void(0)"
+                                        onClick={
+                                          this.state.pageNumber !== 1
+                                            ? () =>
+                                                this.setState({
+                                                  pageNumber:
+                                                    this.state.pageNumber - 1,
+                                                })
+                                            : () => console.log("nope")
+                                        }
+                                      >
+                                        Prev
+                                      </a>
+                                    </li>
+                                    <li class="page-item">
+                                      <a
+                                        class="page-link"
+                                        href="javascript:void(0)"
+                                      >
+                                        {this.state.pager.pageNumber}
+                                      </a>
+                                    </li>
+                                    <li class="page-item">
+                                      <a
+                                        class="page-link"
+                                        href="javascript:void(0)"
+                                        onClick={
+                                          this.state.pageNumber !==
+                                          Math.max(
+                                            Math.ceil(
+                                              this.state.pager.totalRecords / 10
+                                            ),
+                                            1
+                                          )
+                                            ? () =>
+                                                this.setState({
+                                                  pageNumber:
+                                                    this.state.pageNumber + 1,
+                                                })
+                                            : () => console.log("nope")
+                                        }
+                                      >
+                                        Next
+                                      </a>
+                                    </li>
+                                  </ul>
+                                </div>
+                                <div class="g">
+                                  <div class=" pagination-goto d-flex justify-content-center justify-content-md-start gx-3 ">
+                                    <div>Page</div>
+                                    <div>
+                                      <select
+                                        class=""
+                                        data-dropdown="xs center"
+                                        defaultValue={1}
+                                        value={this.state.pageNumber}
+                                        onChange={(event) => {
+                                          this.setState({
+                                            pageNumber: parseInt(
+                                              event.target.value
+                                            ),
+                                          });
+                                        }}
+                                      >
+                                        {this.state.pager.totalRecords &&
+                                          [
+                                            ...new Array(
+                                              Math.max(
+                                                Math.ceil(
+                                                  this.state.pager
+                                                    .totalRecords / 10
+                                                ),
+                                                1
+                                              )
+                                            ),
+                                          ].map((_, index) =>
+                                            index ===
+                                            this.state.pager.pageNumber ? (
+                                              <option value={index + 1}>
+                                                {index + 1}
+                                              </option>
+                                            ) : (
+                                              <option value={index + 1}>
+                                                {index + 1}
+                                              </option>
+                                            )
+                                          )}
+                                      </select>
+                                    </div>
+                                    <div>
+                                      OF{" "}
+                                      {Math.max(
+                                        Math.ceil(
+                                          this.state.pager.totalRecords / 10
+                                        ),
+                                        1
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

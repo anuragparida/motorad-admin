@@ -1,27 +1,23 @@
 import React, { PureComponent } from "react";
 import ProductsListItem from "./../../components/ProductsListItem/ProductsListItem";
-import Pagination from "./../../components/Pagination/Pagination";
 import Footer from "./../../components/Footer/Footer";
 import Header from "./../../components/Header/Header";
 import Sidebar from "./../../components/Sidebar";
 import axios from "axios";
-import { server, config, checkAccess } from "../../env";
+import { server, config, checkAccess, formDataConfig } from "../../env";
 
 export default class ProductsList extends PureComponent {
   state = {
     products: [],
-    pager: {},
+    editId: "",
+    editProduct: {},
   };
 
   componentDidMount() {
     this.readProducts("", 1);
   }
 
-  readProducts = async (search, pageNumber) => {
-    const params = {
-      search: search,
-      pageNumber: String(pageNumber),
-    };
+  readProducts = async () => {
     await axios
       .get(server + "/api/product/read", config)
       .then((rsp) => {
@@ -34,6 +30,62 @@ export default class ProductsList extends PureComponent {
       .catch((err) => {
         checkAccess(err);
         console.error(err);
+      });
+  };
+
+  addProduct = async (e) => {
+    e.preventDefault();
+
+    var params = Array.from(e.target.elements)
+      .filter((el) => el.name)
+      .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
+
+    let formData = new FormData();
+
+    for (const [key, value] of Object.entries(params)) {
+      formData.append(key, value);
+    }
+
+    axios
+      .post(server + `/api/product/create`, formData, formDataConfig)
+      .then((rsp) => {
+        console.log(rsp);
+        // window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err.response);
+        if (err.response) {
+        }
+      });
+  };
+
+  editProduct = async (e) => {
+    e.preventDefault();
+
+    var params = Array.from(e.target.elements)
+      .filter((el) => el.name)
+      .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
+
+    let formData = new FormData();
+
+    for (const [key, value] of Object.entries(params)) {
+      formData.append(key, value);
+    }
+
+    axios
+      .put(
+        server + `/api/product/update/${this.state.editId}`,
+        formData,
+        formDataConfig
+      )
+      .then((rsp) => {
+        console.log(rsp);
+        // window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err.response);
+        if (err.response) {
+        }
       });
   };
 
@@ -72,26 +124,11 @@ export default class ProductsList extends PureComponent {
                                   <a
                                     class="btn btn-white btn-outline-light"
                                     href="#"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalLong"
                                   >
-                                    Export
+                                    Add New Product
                                   </a>
-                                </li>
-                                <li class="nk-block-tools-opt">
-                                  <div class="drodown">
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                      <ul class="link-list-opt no-bdr">
-                                        <li>
-                                          <a href="#">Add User</a>
-                                        </li>
-                                        <li>
-                                          <a href="#">Add Team</a>
-                                        </li>
-                                        <li>
-                                          <a href="#">Import User</a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
                                 </li>
                               </ul>
                             </div>
@@ -102,272 +139,6 @@ export default class ProductsList extends PureComponent {
                     <div class="nk-block">
                       <div class="card card-stretch">
                         <div class="card-inner-group">
-                          <div class="card-inner position-relative card-tools-toggle">
-                            <div class="card-title-group">
-                              <div class="card-tools">
-                                <div class="form-inline flex-nowrap gx-3">
-                                  <div class="form-wrap w-150px">
-                                    <select
-                                      class="form-select form-select-sm"
-                                      data-search="off"
-                                      data-placeholder="Bulk Action"
-                                    >
-                                      <option value="">Bulk Action</option>
-                                      <option value="email">Send Email</option>
-                                      <option value="group">
-                                        Change Group
-                                      </option>
-                                      <option value="suspend">
-                                        Suspend User
-                                      </option>
-                                      <option value="delete">
-                                        Delete User
-                                      </option>
-                                    </select>
-                                  </div>
-                                  <div class="btn-wrap">
-                                    <span class="d-none d-md-block">
-                                      <button class="btn btn-dim btn-outline-light disabled">
-                                        Apply
-                                      </button>
-                                    </span>
-                                    <span class="d-md-none">
-                                      <button class="btn btn-dim btn-outline-light btn-icon disabled">
-                                        <em class="icon ni ni-arrow-right"></em>
-                                      </button>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="card-tools mr-n1">
-                                <ul class="btn-toolbar gx-1">
-                                  <li>
-                                    <a
-                                      href="#"
-                                      class="btn btn-icon search-toggle toggle-search"
-                                      data-target="search"
-                                    >
-                                      <em class="icon ni ni-search"></em>
-                                    </a>
-                                  </li>
-                                  <li class="btn-toolbar-sep"></li>
-                                  <li>
-                                    <div class="toggle-wrap">
-                                      <a
-                                        href="#"
-                                        class="btn btn-icon btn-trigger toggle"
-                                        data-target="cardTools"
-                                      >
-                                        <em class="icon ni ni-menu-right"></em>
-                                      </a>
-                                      <div
-                                        class="toggle-content"
-                                        data-content="cardTools"
-                                      >
-                                        <ul class="btn-toolbar gx-1">
-                                          <li class="toggle-close">
-                                            <a
-                                              href="#"
-                                              class="btn btn-icon btn-trigger toggle"
-                                              data-target="cardTools"
-                                            >
-                                              <em class="icon ni ni-arrow-left"></em>
-                                            </a>
-                                          </li>
-                                          <li>
-                                            <div class="dropdown">
-                                              <a
-                                                href="#"
-                                                class="btn btn-trigger btn-icon dropdown-toggle"
-                                                data-toggle="dropdown"
-                                              >
-                                                <div class="dot dot-primary"></div>
-                                                <em class="icon ni ni-filter-alt"></em>
-                                              </a>
-                                              <div class="filter-wg dropdown-menu dropdown-menu-xl dropdown-menu-right">
-                                                <div class="dropdown-head">
-                                                  <span class="sub-title dropdown-title">
-                                                    Filter Users
-                                                  </span>
-                                                  <div class="dropdown">
-                                                    <a
-                                                      href="#"
-                                                      class="btn btn-sm btn-icon"
-                                                    >
-                                                      <em class="icon ni ni-more-h"></em>
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                                <div class="dropdown-body dropdown-body-rg">
-                                                  <div class="row gx-6 gy-3">
-                                                    <div class="col-6">
-                                                      <div class="custom-control custom-control-sm custom-checkbox">
-                                                        <input
-                                                          type="checkbox"
-                                                          class="custom-control-input"
-                                                          id="hasBalance"
-                                                        />
-                                                        <label
-                                                          class="custom-control-label"
-                                                          for="hasBalance"
-                                                        >
-                                                          {" "}
-                                                          Have Balance
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                      <div class="custom-control custom-control-sm custom-checkbox">
-                                                        <input
-                                                          type="checkbox"
-                                                          class="custom-control-input"
-                                                          id="hasKYC"
-                                                        />
-                                                        <label
-                                                          class="custom-control-label"
-                                                          for="hasKYC"
-                                                        >
-                                                          {" "}
-                                                          KYC Verified
-                                                        </label>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                      <div class="form-group">
-                                                        <label class="overline-title overline-title-alt">
-                                                          Role
-                                                        </label>
-                                                        <select class="form-select form-select-sm">
-                                                          <option value="any">
-                                                            Any Role
-                                                          </option>
-                                                          <option value="investor">
-                                                            Investor
-                                                          </option>
-                                                          <option value="seller">
-                                                            Seller
-                                                          </option>
-                                                          <option value="buyer">
-                                                            Buyer
-                                                          </option>
-                                                        </select>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                      <div class="form-group">
-                                                        <label class="overline-title overline-title-alt">
-                                                          Status
-                                                        </label>
-                                                        <select class="form-select form-select-sm">
-                                                          <option value="any">
-                                                            Any Status
-                                                          </option>
-                                                          <option value="active">
-                                                            Active
-                                                          </option>
-                                                          <option value="pending">
-                                                            Pending
-                                                          </option>
-                                                          <option value="suspend">
-                                                            Suspend
-                                                          </option>
-                                                          <option value="deleted">
-                                                            Deleted
-                                                          </option>
-                                                        </select>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-12">
-                                                      <div class="form-group">
-                                                        <button
-                                                          type="button"
-                                                          class="btn btn-secondary"
-                                                        >
-                                                          Filter
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                <div class="dropdown-foot between">
-                                                  <a class="clickable" href="#">
-                                                    Reset Filter
-                                                  </a>
-                                                  <a href="#">Save Filter</a>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </li>
-                                          <li>
-                                            <div class="dropdown">
-                                              <a
-                                                href="#"
-                                                class="btn btn-trigger btn-icon dropdown-toggle"
-                                                data-toggle="dropdown"
-                                              >
-                                                <em class="icon ni ni-setting"></em>
-                                              </a>
-                                              <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
-                                                <ul class="link-check">
-                                                  <li>
-                                                    <span>Show</span>
-                                                  </li>
-                                                  <li class="active">
-                                                    <a href="#">10</a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">20</a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">50</a>
-                                                  </li>
-                                                </ul>
-                                                <ul class="link-check">
-                                                  <li>
-                                                    <span>Order</span>
-                                                  </li>
-                                                  <li class="active">
-                                                    <a href="#">DESC</a>
-                                                  </li>
-                                                  <li>
-                                                    <a href="#">ASC</a>
-                                                  </li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </div>
-                            </div>
-                            <div
-                              class="card-search search-wrap"
-                              data-search="search"
-                            >
-                              <div class="card-body">
-                                <div class="search-content">
-                                  <a
-                                    href="#"
-                                    class="search-back btn btn-icon toggle-search"
-                                    data-target="search"
-                                  >
-                                    <em class="icon ni ni-arrow-left"></em>
-                                  </a>
-                                  <input
-                                    type="text"
-                                    class="form-control border-transparent form-focus-none"
-                                    placeholder="Search by user or email"
-                                  />
-                                  <button class="search-submit btn btn-icon">
-                                    <em class="icon ni ni-search"></em>
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
                           <div class="card-inner p-0">
                             <div class="nk-tb-list nk-tb-ulist is-compact">
                               <div class="nk-tb-item nk-tb-head">
@@ -390,87 +161,30 @@ export default class ProductsList extends PureComponent {
                                   <span class="sub-text">Photos</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Brochure</span>
+                                  <span class="sub-text">Banner</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Features</span>
+                                  <span class="sub-text">Brochure</span>
                                 </div>
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Type</span>
                                 </div>
-                                <div class="nk-tb-col nk-tb-col-tools text-right">
-                                  <div class="dropdown">
-                                    <div class="dropdown-menu dropdown-menu-xs dropdown-menu-right">
-                                      <ul class="link-tidy sm no-bdr">
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="bl"
-                                              class="custom-control-input"
-                                              checked="checked"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="bl"
-                                            >
-                                              Balance
-                                            </label>
-                                          </div>
-                                        </li>
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="ph"
-                                              class="custom-control-input"
-                                              checked="checked"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="ph"
-                                            >
-                                              Phone
-                                            </label>
-                                          </div>
-                                        </li>
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="vri"
-                                              class="custom-control-input"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="vri"
-                                            >
-                                              Verified
-                                            </label>
-                                          </div>
-                                        </li>
-                                        <li>
-                                          <div class="custom-control custom-control-sm custom-checkbox">
-                                            <input
-                                              id="st"
-                                              class="custom-control-input"
-                                              type="checkbox"
-                                            />
-                                            <label
-                                              class="custom-control-label"
-                                              for="st"
-                                            >
-                                              Status
-                                            </label>
-                                          </div>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Edit</span>
                                 </div>
                               </div>
                               {this.state.products.map((x, i) => (
-                                <ProductsListItem data={x} />
+                                <ProductsListItem
+                                  data={x}
+                                  editData={{
+                                    func: () =>
+                                      this.setState({
+                                        editId: x.id,
+                                        editProduct: x,
+                                      }),
+                                    func2: () => this.getInvoice(x.id),
+                                  }}
+                                />
                               ))}
                             </div>
                           </div>
@@ -489,6 +203,262 @@ export default class ProductsList extends PureComponent {
             <Footer />
           </div>
         </div>
+        <section class="modal_section_2">
+          <div
+            class="modal fade"
+            id="exampleModalLong"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLongTitle"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <form onSubmit={this.addProduct}>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label for="">Name</label>
+                          <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Price</label>
+                          <input
+                            type="number"
+                            name="price"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Description</label>
+                          <input
+                            type="text"
+                            name="description"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Color</label>
+                          <input
+                            type="text"
+                            name="color"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">EMI (true/false)</label>
+                          <input
+                            type="text"
+                            name="emi"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Type (product/accessory)</label>
+                          <input
+                            type="text"
+                            name="type"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Price2</label>
+                          <input
+                            type="number"
+                            name="price2"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Features (html)</label>
+                          <input
+                            type="text"
+                            name="features"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Photos</label>
+                          <input
+                            type="file"
+                            name="photos"
+                            class="form-control"
+                            multiple
+                            required
+                          ></input>
+                          <label for="">Brochure</label>
+                          <input
+                            type="file"
+                            name="brochure"
+                            class="form-control"
+                            required
+                          ></input>
+                          <label for="">Banner</label>
+                          <input
+                            type="file"
+                            name="banner"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success my-2">
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="modal_section_2">
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalTitle"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <form onSubmit={this.editProduct}>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label for="">Name</label>
+                          <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.name}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Price</label>
+                          <input
+                            type="number"
+                            name="price"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.price}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Description</label>
+                          <input
+                            type="text"
+                            name="description"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.description}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Color</label>
+                          <input
+                            type="text"
+                            name="color"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.color}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">EMI (true/false)</label>
+                          <input
+                            type="text"
+                            name="emi"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.emi}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Type (product/accessory)</label>
+                          <input
+                            type="text"
+                            name="type"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.type}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Price2</label>
+                          <input
+                            type="number"
+                            name="price2"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.price2}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Features (html)</label>
+                          <input
+                            type="text"
+                            name="features"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.features}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Photos</label>
+                          <input
+                            type="file"
+                            name="photos"
+                            class="form-control"
+                            multiple
+                            required
+                          ></input>
+                          <label for="">Brochure</label>
+                          <input
+                            type="file"
+                            name="brochure"
+                            class="form-control"
+                            required
+                          ></input>
+                          <label for="">Banner</label>
+                          <input
+                            type="file"
+                            name="banner"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success my-2">
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     );
   }

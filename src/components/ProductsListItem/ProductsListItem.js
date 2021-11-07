@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 const ProductsListItem = (props) => {
   const data = props.data;
+  const editData = props.editData;
   return (
     <div class="nk-tb-item">
       <div class="nk-tb-col">
@@ -26,44 +27,22 @@ const ProductsListItem = (props) => {
         ))}
       </div>
       <div class="nk-tb-col">
-        <img
-          src={"https://api.emotorad.in" + data.brochure}
-          height="100px"
-          width="auto"
-        />
+        <img src={"https://api.emotorad.in" + data.banner} class="img-fluid" />
       </div>
-      <div class="nk-tb-col">{data.features}</div>
+      <div class="nk-tb-col">{data.brochure}</div>
       <div class="nk-tb-col">{data.type}</div>
-      <div class="nk-tb-col nk-tb-col-tools">
-        <ul class="nk-tb-actions gx-2">
-          <li class="nk-tb-action-hidden"></li>
-          <li class="nk-tb-action-hidden"></li>
-          <li class="nk-tb-action-hidden"></li>
-          <li>
-            <div class="drodown">
-              <div class="dropdown-menu dropdown-menu-right">
-                <ul class="link-list-opt no-bdr">
-                  <li>
-                    <a href="#">View Details</a>
-                  </li>
-                  <li>
-                    <a href="#">Orders</a>
-                  </li>
-                  <li class="divider"></li>
-                  <li>
-                    <a href="#">Reset Pass</a>
-                  </li>
-                  <li>
-                    <a href="#">Reset 2FA</a>
-                  </li>
-                  <li>
-                    <a href="#">Suspend User</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-        </ul>
+      <div class="nk-tb-col">
+        <a
+          href="javascript:void(0)"
+          class="btn btn-warning"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          onClick={() => {
+            editData.func();
+          }}
+        >
+          Edit
+        </a>
       </div>
     </div>
   );

@@ -14,6 +14,13 @@ module.exports = {
       responseType: "json",
     },
   },
+  formDataConfig: {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${Cookies.get("token")}`,
+      responseType: "json",
+    },
+  },
   checkAccess: (err) => {
     if (err.response) {
       if (err.response.status === 401) {
