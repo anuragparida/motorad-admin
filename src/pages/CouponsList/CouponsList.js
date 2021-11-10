@@ -76,6 +76,27 @@ export default class CouponsList extends PureComponent {
     //   });
   };
 
+  getProductsArray = (coupon, type) => {
+    let localArray = [];
+    if (type === "p") {
+      if (coupon.product === "all") return "all";
+      coupon.product.forEach((prod) => {
+        localArray.push(
+          this.state.products.filter((x) => x.id === prod).map((x) => x.name)
+        );
+      });
+    } else if (type === "a") {
+      if (coupon.accessories === "all") return "all";
+      coupon.accessories.forEach((prod) => {
+        localArray.push(
+          this.state.accessories.filter((x) => x.id === prod).map((x) => x.name)
+        );
+      });
+    }
+    console.log(type, localArray);
+    return localArray;
+  };
+
   render() {
     return (
       <div class="nk-app-root">
@@ -317,7 +338,11 @@ export default class CouponsList extends PureComponent {
                                 </div>
                               </div>
                               {this.state.coupons.map((x, i) => (
-                                <CouponsListItem data={x} />
+                                <CouponsListItem
+                                  data={x}
+                                  products={this.getProductsArray(x, "p")}
+                                  accessories={this.getProductsArray(x, "a")}
+                                />
                               ))}
                             </div>
                           </div>
