@@ -509,86 +509,55 @@ export default class StoresList extends PureComponent {
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Price</label>
-                          <input
-                            type="number"
-                            name="price"
-                            class="form-control"
-                            required
-                          ></input>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Description</label>
+                          <label for="">Address</label>
                           <input
                             type="text"
-                            name="description"
+                            name="address"
                             class="form-control"
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Color</label>
+                          <label for="">City</label>
                           <input
                             type="text"
-                            name="color"
+                            name="city"
                             class="form-control"
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">EMI (true/false)</label>
+                          <label for="">State</label>
                           <input
                             type="text"
-                            name="emi"
+                            name="state"
                             class="form-control"
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Type</label>
-                          <select name="type" class="form-control" required>
-                            <option value="product">Product</option>
-                            <option value="accessory">Accessory</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Price2</label>
-                          <input
-                            type="number"
-                            name="price2"
-                            class="form-control"
-                            required
-                          ></input>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Features (html)</label>
+                          <label for="">Country</label>
                           <input
                             type="text"
-                            name="features"
+                            name="country"
                             class="form-control"
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Photos</label>
+                          <label for="">Longitutde</label>
                           <input
-                            type="file"
-                            name="photos"
-                            class="form-control"
-                            multiple
-                            required
-                          ></input>
-                          <label for="">Brochure</label>
-                          <input
-                            type="file"
-                            name="brochure"
+                            type="text"
+                            name="long"
                             class="form-control"
                             required
                           ></input>
-                          <label for="">Banner</label>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Latitude</label>
                           <input
-                            type="file"
-                            name="banner"
+                            type="text"
+                            name="lat"
                             class="form-control"
                             required
                           ></input>
@@ -632,96 +601,62 @@ export default class StoresList extends PureComponent {
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Price</label>
-                          <input
-                            type="number"
-                            name="price"
-                            class="form-control"
-                            defaultValue={this.state.editProduct.price}
-                            required
-                          ></input>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Description</label>
+                          <label for="">Address</label>
                           <input
                             type="text"
-                            name="description"
+                            name="address"
                             class="form-control"
-                            defaultValue={this.state.editProduct.description}
+                            defaultValue={this.state.editProduct.address}
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Color</label>
+                          <label for="">City</label>
                           <input
                             type="text"
-                            name="color"
+                            name="city"
                             class="form-control"
-                            defaultValue={this.state.editProduct.color}
+                            defaultValue={this.state.editProduct.city}
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">EMI (true/false)</label>
+                          <label for="">State</label>
                           <input
                             type="text"
-                            name="emi"
+                            name="state"
                             class="form-control"
-                            defaultValue={this.state.editProduct.emi}
+                            defaultValue={this.state.editProduct.state}
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Type (product/accessory)</label>
+                          <label for="">Country</label>
                           <input
                             type="text"
-                            name="type"
+                            name="country"
                             class="form-control"
-                            defaultValue={this.state.editProduct.type}
+                            defaultValue={this.state.editProduct.country}
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Price2</label>
-                          <input
-                            type="number"
-                            name="price2"
-                            class="form-control"
-                            defaultValue={this.state.editProduct.price2}
-                            required
-                          ></input>
-                        </div>
-                        <div class="form-group">
-                          <label for="">Features (html)</label>
+                          <label for="">Longitutde</label>
                           <input
                             type="text"
-                            name="features"
+                            name="long"
                             class="form-control"
-                            defaultValue={this.state.editProduct.features}
+                            defaultValue={this.state.editProduct.long}
                             required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Photos</label>
+                          <label for="">Latitude</label>
                           <input
-                            type="file"
-                            name="photos"
+                            type="text"
+                            name="lat"
                             class="form-control"
-                            multiple
-                            required
-                          ></input>
-                          <label for="">Brochure</label>
-                          <input
-                            type="file"
-                            name="brochure"
-                            class="form-control"
-                            required
-                          ></input>
-                          <label for="">Banner</label>
-                          <input
-                            type="file"
-                            name="banner"
-                            class="form-control"
+                            defaultValue={this.state.editProduct.lat}
                             required
                           ></input>
                         </div>
