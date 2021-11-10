@@ -9,12 +9,13 @@ import { server, config, checkAccess, formDataConfig } from "../../env";
 export default class ProductsList extends PureComponent {
   state = {
     products: [],
+    accessories: [],
     editId: "",
     editProduct: {},
   };
 
   componentDidMount() {
-    this.readProducts("", 1);
+    this.readProducts();
   }
 
   readProducts = async () => {
@@ -24,7 +25,7 @@ export default class ProductsList extends PureComponent {
         console.log(rsp);
         this.setState({
           products: rsp.data.payload,
-          pager: rsp.data.pager,
+          accessories: rsp.data.payload.filter((e) => e.type === "accessory"),
         });
       })
       .catch((err) => {
@@ -50,7 +51,7 @@ export default class ProductsList extends PureComponent {
       .post(server + `/api/product/create`, formData, formDataConfig)
       .then((rsp) => {
         console.log(rsp);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response);
@@ -80,7 +81,7 @@ export default class ProductsList extends PureComponent {
       )
       .then((rsp) => {
         console.log(rsp);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response);
@@ -264,13 +265,11 @@ export default class ProductsList extends PureComponent {
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Type (product/accessory)</label>
-                          <input
-                            type="text"
-                            name="type"
-                            class="form-control"
-                            required
-                          ></input>
+                          <label for="">Type</label>
+                          <select name="type" class="form-control" required>
+                            <option value="product">Product</option>
+                            <option value="accessory">Accessory</option>
+                          </select>
                         </div>
                         <div class="form-group">
                           <label for="">Price2</label>

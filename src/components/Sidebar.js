@@ -9,6 +9,13 @@ export default class Sidebar extends PureComponent {
     tab: window.location.href.split("/")[3] || "/",
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.tab === prevState.tab) return;
+    this.setState({
+      tab: window.location.href.split("/")[3] || "/",
+    });
+  }
+
   logout = () => {
     Cookies.remove("token");
     window.location.href = "/login";
@@ -193,6 +200,66 @@ export default class Sidebar extends PureComponent {
                       <em class="icon ni ni-growth-fill"></em>
                     </span>
                     <span class="nk-menu-text">Forms</span>
+                  </Link>
+                </li>
+                <li class="nk-menu-item">
+                  <Link
+                    to="/emi"
+                    className={
+                      tab === "emi"
+                        ? "nk-menu-link active current-page"
+                        : "nk-menu-link"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tab: "emi",
+                      })
+                    }
+                  >
+                    <span class="nk-menu-icon">
+                      <em class="icon ni ni-growth-fill"></em>
+                    </span>
+                    <span class="nk-menu-text">EMI</span>
+                  </Link>
+                </li>
+                <li class="nk-menu-item">
+                  <Link
+                    to="/stores"
+                    className={
+                      tab === "stores"
+                        ? "nk-menu-link active current-page"
+                        : "nk-menu-link"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tab: "stores",
+                      })
+                    }
+                  >
+                    <span class="nk-menu-icon">
+                      <em class="icon ni ni-growth-fill"></em>
+                    </span>
+                    <span class="nk-menu-text">Stores</span>
+                  </Link>
+                </li>
+                <li class="nk-menu-item">
+                  <Link
+                    to="/links"
+                    className={
+                      tab === "links"
+                        ? "nk-menu-link active current-page"
+                        : "nk-menu-link"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tab: "links",
+                      })
+                    }
+                  >
+                    <span class="nk-menu-icon">
+                      <em class="icon ni ni-growth-fill"></em>
+                    </span>
+                    <span class="nk-menu-text">Links</span>
                   </Link>
                 </li>
                 <li class="nk-menu-heading">

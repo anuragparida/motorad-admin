@@ -19,6 +19,9 @@ import ProductsList from "./../pages/ProductsList/ProductsList";
 import CouponsList from "./../pages/CouponsList/CouponsList";
 import Dashboard from "./../pages/Dashboard/Dashboard";
 import FormsList from "./../pages/FormsList/FormsList";
+import EMIList from "./../pages/EMIList/EMIList";
+import SocialList from "./../pages/SocialList/SocialList";
+import StoresList from "./../pages/StoresList/StoresList";
 
 export default function DashboardRouter() {
   return (
@@ -37,6 +40,9 @@ export default function DashboardRouter() {
       <Route path="/products" component={ProductsList} />
       <Route path="/coupons" component={CouponsList} />
       <Route path="/forms" component={FormsList} />
+      <Route path="/emi" component={EMIList} />
+      <Route path="/links" component={SocialList} />
+      <Route path="/stores" component={StoresList} />
       <Route path="/" component={Dashboard} />
     </Switch>
   );

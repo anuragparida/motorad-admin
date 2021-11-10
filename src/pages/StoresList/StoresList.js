@@ -1,25 +1,25 @@
 import React, { PureComponent } from "react";
-import Sidebar from "./../../components/Sidebar";
-import Header from "./../../components/Header/Header";
-import Footer from "./../../components/Footer/Footer";
-import OrdersListItem from "./../../components/OrdersListItem/OrdersListItem";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import Sidebar from "../../components/Sidebar";
 import axios from "axios";
-import { server, config, checkAccess } from "../../env";
+import { server, config, checkAccess, formDataConfig } from "../../env";
+import StoresListItem from "../../components/StoresListItem/StoresListItem";
 
-export default class OrdersList extends PureComponent {
+export default class StoresList extends PureComponent {
   state = {
-    orders: [],
+    products: [],
+    editId: "",
+    editProduct: {},
     search: "",
     pageNumber: 1,
     sortBy: "id",
     sortOrder: "desc",
     pager: {},
-    editId: "",
-    editOrder: {},
   };
 
   componentDidMount() {
-    this.readOrders("", 1);
+    this.readProducts("", 1);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -30,7 +30,7 @@ export default class OrdersList extends PureComponent {
       this.state.sortOrder === prevState.sortOrder
     )
       return;
-    this.readOrders(
+    this.readProducts(
       this.state.search,
       this.state.pageNumber,
       this.state.sortBy,
@@ -38,7 +38,7 @@ export default class OrdersList extends PureComponent {
     );
   }
 
-  readOrders = async (search, pageNumber, sortBy, sortOrder) => {
+  readProducts = async (search, pageNumber, sortBy, sortOrder) => {
     const params = {
       search: search,
       pageNumber: String(pageNumber),
@@ -46,11 +46,11 @@ export default class OrdersList extends PureComponent {
       sortOrder: sortOrder,
     };
     await axios
-      .post(server + "/api/order/read", params, config)
+      .post(server + "/api/store/read", params, config)
       .then((rsp) => {
         console.log(rsp);
         this.setState({
-          orders: rsp.data.payload,
+          products: rsp.data.payload,
           pager: rsp.data.pager,
         });
       })
@@ -60,19 +60,21 @@ export default class OrdersList extends PureComponent {
       });
   };
 
-  editOrderDelivery = async (e) => {
+  addProduct = async (e) => {
     e.preventDefault();
 
     var params = Array.from(e.target.elements)
       .filter((el) => el.name)
       .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
 
+    let formData = new FormData();
+
+    for (const [key, value] of Object.entries(params)) {
+      formData.append(key, value);
+    }
+
     axios
-      .put(
-        server + `/api/order/update-delivery/${this.state.editId}`,
-        params,
-        config
-      )
+      .post(server + `/api/store/create`, formData, formDataConfig)
       .then((rsp) => {
         console.log(rsp);
         window.location.reload();
@@ -84,17 +86,28 @@ export default class OrdersList extends PureComponent {
       });
   };
 
-  getInvoice = async (id) => {
+  editProduct = async (e) => {
+    e.preventDefault();
+
+    var params = Array.from(e.target.elements)
+      .filter((el) => el.name)
+      .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
+
+    let formData = new FormData();
+
+    for (const [key, value] of Object.entries(params)) {
+      formData.append(key, value);
+    }
+
     axios
-      .get(server + `/api/order/download-invoice/${id}`, config)
+      .put(
+        server + `/api/store/update/${this.state.editId}`,
+        formData,
+        formDataConfig
+      )
       .then((rsp) => {
         console.log(rsp);
-        let link = document.createElement("a");
-        link.href = "https://api.emotorad.in" + rsp.data.payload;
-        link.setAttribute("target", "_blank");
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response);
@@ -117,10 +130,11 @@ export default class OrdersList extends PureComponent {
                     <div class="nk-block-head nk-block-head-sm">
                       <div class="nk-block-between">
                         <div class="nk-block-head-content">
-                          <h3 class="nk-block-title page-title">Orders List</h3>
+                          <h3 class="nk-block-title page-title">Stores List</h3>
                           <div class="nk-block-des text-soft">
                             <p>
-                              You have total {this.state.orders.length} orders.
+                              You have total {this.state.products.length}{" "}
+                              stores.
                             </p>
                           </div>
                         </div>
@@ -131,14 +145,16 @@ export default class OrdersList extends PureComponent {
                               data-content="pageMenu"
                             >
                               <ul class="nk-block-tools g-3">
-                                {/* <li>
+                                <li>
                                   <a
                                     class="btn btn-white btn-outline-light"
                                     href="#"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalLong"
                                   >
-                                    Export
+                                    Add New Store
                                   </a>
-                                </li> */}
+                                </li>
                               </ul>
                             </div>
                           </div>
@@ -228,7 +244,7 @@ export default class OrdersList extends PureComponent {
                                             <a
                                               href="#"
                                               class={
-                                                this.state.sortBy === "product"
+                                                this.state.sortBy === "isPaid"
                                                   ? this.state.sortOrder ===
                                                     "asc"
                                                     ? "btn btn-success"
@@ -237,7 +253,7 @@ export default class OrdersList extends PureComponent {
                                               }
                                               onClick={() => {
                                                 this.setState({
-                                                  sortBy: "products",
+                                                  sortBy: "isPaid",
                                                   sortOrder:
                                                     this.state.sortOrder ===
                                                     "desc"
@@ -246,7 +262,33 @@ export default class OrdersList extends PureComponent {
                                                 });
                                               }}
                                             >
-                                              Sort: Product Name
+                                              Sort: isPaid
+                                            </a>
+                                          </li>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class={
+                                                this.state.sortBy ===
+                                                "is_active"
+                                                  ? this.state.sortOrder ===
+                                                    "asc"
+                                                    ? "btn btn-success"
+                                                    : "btn btn-warning"
+                                                  : "btn btn-secondary"
+                                              }
+                                              onClick={() => {
+                                                this.setState({
+                                                  sortBy: "is_active",
+                                                  sortOrder:
+                                                    this.state.sortOrder ===
+                                                    "desc"
+                                                      ? "asc"
+                                                      : "desc",
+                                                });
+                                              }}
+                                            >
+                                              Sort: isActive
                                             </a>
                                           </li>
                                         </ul>
@@ -285,79 +327,38 @@ export default class OrdersList extends PureComponent {
                             <div class="nk-tb-list nk-tb-ulist is-compact">
                               <div class="nk-tb-item nk-tb-head">
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Order ID</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Product Name</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Total Price</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Color</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Coupon</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Discount</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Coupon Type</span>
+                                  <span class="sub-text">Name</span>
                                 </div>
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Address</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Tracking Number</span>
+                                  <span class="sub-text">City</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Carrier</span>
+                                  <span class="sub-text">State</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Frame Number</span>
+                                  <span class="sub-text">Longitude</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Date of Delivery</span>
+                                  <span class="sub-text">Latitude</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Status</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Update Delivery</span>
-                                </div>
-                                <div class="nk-tb-col">
-                                  <span class="sub-text">Download Invoice</span>
+                                  <span class="sub-text">Edit</span>
                                 </div>
                               </div>
-                              {this.state.orders.map((x, i) => (
-                                <>
-                                  {x.products.map((y, i2) => (
-                                    <OrdersListItem
-                                      data={x}
-                                      specData={y}
-                                      editData={{
-                                        func: () =>
-                                          this.setState({
-                                            editId: x.id,
-                                            editOrder: x,
-                                          }),
-                                        func2: () => this.getInvoice(x.id),
-                                      }}
-                                    />
-                                  ))}
-                                  {x.accessories.map((y, i2) => (
-                                    <OrdersListItem
-                                      data={x}
-                                      specData={y}
-                                      editData={{
-                                        func: () =>
-                                          this.setState({ editId: x.id }),
-                                        func2: () => this.getInvoice(x.id),
-                                      }}
-                                    />
-                                  ))}
-                                </>
+                              {this.state.products.map((x, i) => (
+                                <StoresListItem
+                                  data={x}
+                                  editData={{
+                                    func: () =>
+                                      this.setState({
+                                        editId: x.id,
+                                        editProduct: x,
+                                      }),
+                                  }}
+                                />
                               ))}
                             </div>
                           </div>
@@ -495,43 +496,233 @@ export default class OrdersList extends PureComponent {
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-body">
-                  <form onSubmit={this.editOrderDelivery}>
+                  <form onSubmit={this.addProduct}>
                     <div class="row">
                       <div class="col-lg-12">
                         <div class="form-group">
-                          <label for="">Tracking Number</label>
+                          <label for="">Name</label>
                           <input
                             type="text"
-                            name="tracking"
+                            name="name"
                             class="form-control"
-                            defaultValue={this.state.editOrder.tracking}
+                            required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Carrier</label>
+                          <label for="">Price</label>
                           <input
-                            type="text"
-                            name="career"
+                            type="number"
+                            name="price"
                             class="form-control"
-                            defaultValue={this.state.editOrder.career}
+                            required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Date of Delivery</label>
+                          <label for="">Description</label>
                           <input
-                            type="date"
-                            name="date_of_delivery"
+                            type="text"
+                            name="description"
                             class="form-control"
-                            defaultValue={this.state.editOrder.date_of_delivery}
+                            required
                           ></input>
                         </div>
                         <div class="form-group">
-                          <label for="">Frame Number</label>
+                          <label for="">Color</label>
                           <input
                             type="text"
-                            name="frame_number"
+                            name="color"
                             class="form-control"
-                            defaultValue={this.state.editOrder.frame_number}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">EMI (true/false)</label>
+                          <input
+                            type="text"
+                            name="emi"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Type</label>
+                          <select name="type" class="form-control" required>
+                            <option value="product">Product</option>
+                            <option value="accessory">Accessory</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Price2</label>
+                          <input
+                            type="number"
+                            name="price2"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Features (html)</label>
+                          <input
+                            type="text"
+                            name="features"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Photos</label>
+                          <input
+                            type="file"
+                            name="photos"
+                            class="form-control"
+                            multiple
+                            required
+                          ></input>
+                          <label for="">Brochure</label>
+                          <input
+                            type="file"
+                            name="brochure"
+                            class="form-control"
+                            required
+                          ></input>
+                          <label for="">Banner</label>
+                          <input
+                            type="file"
+                            name="banner"
+                            class="form-control"
+                            required
+                          ></input>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success my-2">
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="modal_section_2">
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalTitle"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <form onSubmit={this.editProduct}>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label for="">Name</label>
+                          <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.name}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Price</label>
+                          <input
+                            type="number"
+                            name="price"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.price}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Description</label>
+                          <input
+                            type="text"
+                            name="description"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.description}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Color</label>
+                          <input
+                            type="text"
+                            name="color"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.color}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">EMI (true/false)</label>
+                          <input
+                            type="text"
+                            name="emi"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.emi}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Type (product/accessory)</label>
+                          <input
+                            type="text"
+                            name="type"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.type}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Price2</label>
+                          <input
+                            type="number"
+                            name="price2"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.price2}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Features (html)</label>
+                          <input
+                            type="text"
+                            name="features"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.features}
+                            required
+                          ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">Photos</label>
+                          <input
+                            type="file"
+                            name="photos"
+                            class="form-control"
+                            multiple
+                            required
+                          ></input>
+                          <label for="">Brochure</label>
+                          <input
+                            type="file"
+                            name="brochure"
+                            class="form-control"
+                            required
+                          ></input>
+                          <label for="">Banner</label>
+                          <input
+                            type="file"
+                            name="banner"
+                            class="form-control"
+                            required
                           ></input>
                         </div>
                       </div>

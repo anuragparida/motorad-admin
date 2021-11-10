@@ -84,6 +84,23 @@ export default class FormsList extends PureComponent {
       });
   };
 
+  downloadAll = () => {
+    let headers = Object.keys(this.state.customers[0]);
+    let listts = this.state.customers.reduce(
+      (t, e) => [...t, Object.values(e)],
+      []
+    );
+    let emails =
+      "data:text/csv;charset=utf-8," + headers + "\n" + listts.join("\n");
+    console.log(emails);
+    var encodedUri = encodeURI(emails);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", this.state.type + ".csv");
+    document.body.appendChild(link);
+    link.click();
+  };
+
   render() {
     return (
       <div class="nk-app-root">
@@ -104,6 +121,28 @@ export default class FormsList extends PureComponent {
                               You have total {this.state.pager.totalRecords}{" "}
                               {this.state.type} records.
                             </p>
+                          </div>
+                        </div>
+                        <div class="nk-block-head-content">
+                          <div class="toggle-wrap nk-block-tools-toggle">
+                            <div
+                              class="toggle-expand-content"
+                              data-content="pageMenu"
+                            >
+                              <ul class="nk-block-tools g-3">
+                                <li>
+                                  {this.state.customers.length > 0 && (
+                                    <a
+                                      class="btn btn-white btn-outline-light"
+                                      href="javascript:void(0)"
+                                      onClick={this.downloadAll}
+                                    >
+                                      Download Forms
+                                    </a>
+                                  )}
+                                </li>
+                              </ul>
+                            </div>
                           </div>
                         </div>
                       </div>

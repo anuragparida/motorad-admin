@@ -43,7 +43,7 @@ export default class Login extends PureComponent {
           dataLayer.push({
             event: "loginSuccess",
           });
-          window.location.href = "/dada";
+          window.location.href = "/";
         } else {
           this.setState({
             message: (

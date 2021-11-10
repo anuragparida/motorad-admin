@@ -5,15 +5,37 @@ import Sidebar from "./../../components/Sidebar";
 import Header from "./../../components/Header/Header";
 import axios from "axios";
 import { server, config, checkAccess } from "../../env";
+import Select from "react-select";
 
 export default class CouponsList extends PureComponent {
   state = {
+    products: [],
     coupons: [],
+    accessories: [],
+    accList: [],
+    prodList: [],
   };
 
   componentDidMount() {
     this.readCoupons();
+    this.readProducts();
   }
+
+  readProducts = async () => {
+    await axios
+      .get(server + "/api/product/read", config)
+      .then((rsp) => {
+        console.log(rsp);
+        this.setState({
+          products: rsp.data.payload.filter((e) => e.type === "product"),
+          accessories: rsp.data.payload.filter((e) => e.type === "accessory"),
+        });
+      })
+      .catch((err) => {
+        checkAccess(err);
+        console.error(err);
+      });
+  };
 
   readCoupons = async () => {
     await axios
@@ -38,20 +60,20 @@ export default class CouponsList extends PureComponent {
       .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
 
     params.user = JSON.parse(params.user);
-    params.product = JSON.parse(params.product);
-    params.accessories = JSON.parse(params.accessories);
+    params.product = this.state.prodList;
+    params.accessories = this.state.accList;
 
-    axios
-      .post(server + `/api/coupon/create`, params, config)
-      .then((rsp) => {
-        console.log(rsp);
-        // window.location.reload();
-      })
-      .catch((err) => {
-        console.log(err.response);
-        if (err.response) {
-        }
-      });
+    // axios
+    //   .post(server + `/api/coupon/create`, params, config)
+    //   .then((rsp) => {
+    //     console.log(rsp);
+    //     // window.location.reload();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.response);
+    //     if (err.response) {
+    //     }
+    //   });
   };
 
   render() {
@@ -345,15 +367,20 @@ export default class CouponsList extends PureComponent {
                         </div>
                         <div class="form-group">
                           <label for="">Discount Type</label>
-                          <input
-                            type="text"
+                          <select
                             name="discount_type"
                             class="form-control"
                             required
-                          ></input>
+                          >
+                            <option value="flat">Flat</option>
+                            <option value="percentage">Percentage</option>
+                            <option value="accessories">Accessories</option>
+                          </select>
                         </div>
                         <div class="form-group">
-                          <label for="">Discount</label>
+                          <label for="">
+                            Discount (Enter 0 if Type is Accessories)
+                          </label>
                           <input
                             type="number"
                             name="discount"
@@ -390,21 +417,35 @@ export default class CouponsList extends PureComponent {
                         </div>
                         <div class="form-group">
                           <label for="">Product</label>
-                          <input
-                            type="text"
-                            name="product"
-                            class="form-control"
-                            required
-                          ></input>
+                          <Select
+                            options={this.state.products.map((e) => ({
+                              value: e.id,
+                              label: e.name,
+                            }))}
+                            isMulti
+                            isSearchable
+                            onChange={(e) =>
+                              this.setState({
+                                prodList: e.map((x) => x.value),
+                              })
+                            }
+                          />
                         </div>
                         <div class="form-group">
                           <label for="">Accessories</label>
-                          <input
-                            type="text"
-                            name="accessories"
-                            class="form-control"
-                            required
-                          ></input>
+                          <Select
+                            options={this.state.accessories.map((e) => ({
+                              value: e.id,
+                              label: e.name,
+                            }))}
+                            isMulti
+                            isSearchable
+                            onChange={(e) =>
+                              this.setState({
+                                accList: e.map((x) => x.value),
+                              })
+                            }
+                          />
                         </div>
                       </div>
                       <div class="col-lg-12">

@@ -2,12 +2,12 @@ import React from "react";
 import axios from "axios";
 import { server, config, checkAccess } from "../../env";
 
-const ProductsListItem = (props) => {
+const StoresListItem = (props) => {
   const data = props.data;
   const editData = props.editData;
   const deleteCoupon = async () => {
     await axios
-      .delete(server + `/api/product/delete/${data.id}`, config)
+      .delete(server + `/api/store/delete/${data.id}`, config)
       .then((rsp) => {
         console.log(rsp);
         window.location.reload();
@@ -26,24 +26,12 @@ const ProductsListItem = (props) => {
           </div>
         </div>
       </div>
-      <div class="nk-tb-col">{data.price}</div>
-      <div class="nk-tb-col">{data.price2}</div>
-      <div class="nk-tb-col">{data.description}</div>
-      <div class="nk-tb-col">{data.color}</div>
-      <div class="nk-tb-col">
-        {data.photos.map((x) => (
-          <img
-            src={"https://api.emotorad.in" + x}
-            height="100px"
-            width="auto"
-          />
-        ))}
-      </div>
-      <div class="nk-tb-col">
-        <img src={"https://api.emotorad.in" + data.banner} class="img-fluid" />
-      </div>
-      <div class="nk-tb-col">{data.brochure}</div>
-      <div class="nk-tb-col">{data.type}</div>
+      <div class="nk-tb-col">{data.address}</div>
+      <div class="nk-tb-col">{data.city}</div>
+      <div class="nk-tb-col">{data.state}</div>
+      <div class="nk-tb-col">{data.country}</div>
+      <div class="nk-tb-col">{data.long}</div>
+      <div class="nk-tb-col">{data.lat}</div>
       <div class="nk-tb-col">
         <a
           href="javascript:void(0)"
@@ -70,8 +58,4 @@ const ProductsListItem = (props) => {
   );
 };
 
-ProductsListItem.propTypes = {};
-
-ProductsListItem.defaultProps = {};
-
-export default ProductsListItem;
+export default StoresListItem;
