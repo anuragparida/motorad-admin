@@ -62,6 +62,7 @@ export default class CouponsList extends PureComponent {
     params.user = JSON.parse(params.user);
     params.product = this.state.prodList;
     params.accessories = this.state.accList;
+    params.user = "all"
 
     // axios
     //   .post(server + `/api/coupon/create`, params, config)
@@ -324,9 +325,9 @@ export default class CouponsList extends PureComponent {
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Discount Type</span>
                                 </div>
-                                <div class="nk-tb-col">
+                                {/* <div class="nk-tb-col">
                                   <span class="sub-text">User</span>
-                                </div>
+                                </div> */}
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Product</span>
                                 </div>
@@ -431,7 +432,7 @@ export default class CouponsList extends PureComponent {
                             required
                           ></input>
                         </div>
-                        <div class="form-group">
+                        {/* <div class="form-group">
                           <label for="">User</label>
                           <input
                             type="text"
@@ -439,7 +440,7 @@ export default class CouponsList extends PureComponent {
                             class="form-control"
                             required
                           ></input>
-                        </div>
+                        </div> */}
                         <div class="form-group">
                           <label for="">Product</label>
                           <Select

@@ -27,7 +27,7 @@ const CouponsListItem = (props) => {
       <div class="nk-tb-col">{data.total_amount}</div>
       <div class="nk-tb-col">{data.discount}</div>
       <div class="nk-tb-col">{data.discount_type}</div>
-      <div class="nk-tb-col">{JSON.stringify(data.user)}</div>
+      {/* <div class="nk-tb-col">{JSON.stringify(data.user)}</div> */}
       <div class="nk-tb-col">{JSON.stringify(products)}</div>
       <div class="nk-tb-col">{JSON.stringify(accessories)}</div>
       <div class="nk-tb-col">
