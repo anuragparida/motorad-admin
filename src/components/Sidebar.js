@@ -204,6 +204,26 @@ export default class Sidebar extends PureComponent {
                 </li>
                 <li class="nk-menu-item">
                   <Link
+                    to="/faq"
+                    className={
+                      tab === "faq"
+                        ? "nk-menu-link active current-page"
+                        : "nk-menu-link"
+                    }
+                    onClick={() =>
+                      this.setState({
+                        tab: "faq",
+                      })
+                    }
+                  >
+                    <span class="nk-menu-icon">
+                      <em class="icon ni ni-growth-fill"></em>
+                    </span>
+                    <span class="nk-menu-text">FAQs</span>
+                  </Link>
+                </li>
+                <li class="nk-menu-item">
+                  <Link
                     to="/emi"
                     className={
                       tab === "emi"
@@ -264,14 +284,6 @@ export default class Sidebar extends PureComponent {
                 </li>
                 <li class="nk-menu-heading">
                   <h6 class="overline-title text-primary-alt">Website</h6>
-                </li>
-                <li class="nk-menu-item has-sub">
-                  <a href="html/index-analytics.html" class="nk-menu-link">
-                    <span class="nk-menu-icon">
-                      <em class="icon ni ni-growth-fill"></em>
-                    </span>
-                    <span class="nk-menu-text">Site Settings</span>
-                  </a>
                 </li>
                 <li class="nk-menu-item">
                   <a href="html/index-analytics.html" class="nk-menu-link">

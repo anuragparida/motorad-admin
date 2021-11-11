@@ -22,6 +22,7 @@ import FormsList from "./../pages/FormsList/FormsList";
 import EMIList from "./../pages/EMIList/EMIList";
 import SocialList from "./../pages/SocialList/SocialList";
 import StoresList from "./../pages/StoresList/StoresList";
+import FAQList from "./../pages/FAQList/FAQList";
 
 export default function DashboardRouter() {
   return (
@@ -43,6 +44,7 @@ export default function DashboardRouter() {
       <Route path="/emi" component={EMIList} />
       <Route path="/links" component={SocialList} />
       <Route path="/stores" component={StoresList} />
+      <Route path="/faq" component={FAQList} />
       <Route path="/" component={Dashboard} />
     </Switch>
   );

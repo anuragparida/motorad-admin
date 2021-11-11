@@ -207,12 +207,13 @@ export default class FAQList extends PureComponent {
                         </div>
                         <div class="form-group">
                           <label for="">Answer</label>
-                          <input
-                            type="number"
+                          <textarea
                             name="answer"
                             class="form-control"
+                            cols="40"
+                            rows="5"
                             required
-                          ></input>
+                          ></textarea>
                         </div>
                         <div class="form-group">
                           <label for="">Type</label>
@@ -256,26 +257,27 @@ export default class FAQList extends PureComponent {
                             type="text"
                             name="question"
                             class="form-control"
-                            defaultValue={this.editProduct.question}
+                            defaultValue={this.state.editProduct.question}
                             required
                           ></input>
                         </div>
                         <div class="form-group">
                           <label for="">Answer</label>
-                          <input
-                            type="number"
+                          <textarea
                             name="answer"
                             class="form-control"
-                            defaultValue={this.editProduct.answer}
+                            defaultValue={this.state.editProduct.answer}
+                            cols="40"
+                            rows="5"
                             required
-                          ></input>
+                          ></textarea>
                         </div>
                         <div class="form-group">
                           <label for="">Type</label>
                           <select
                             name="type"
                             class="form-control"
-                            defaultValue={this.editProduct.type}
+                            defaultValue={this.state.editProduct.type}
                             required
                           >
                             <option value="General">General</option>
