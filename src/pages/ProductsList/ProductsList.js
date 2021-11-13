@@ -428,21 +428,18 @@ export default class ProductsList extends PureComponent {
                             name="photos"
                             class="form-control"
                             multiple
-                            required
                           ></input>
                           <label for="">Brochure</label>
                           <input
                             type="file"
                             name="brochure"
                             class="form-control"
-                            required
                           ></input>
                           <label for="">Banner</label>
                           <input
                             type="file"
                             name="banner"
                             class="form-control"
-                            required
                           ></input>
                         </div>
                       </div>
