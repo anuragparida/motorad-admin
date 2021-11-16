@@ -150,17 +150,14 @@ export default class ProductsList extends PureComponent {
                                   <span class="sub-text">Price</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Price2</span>
-                                </div>
-                                <div class="nk-tb-col">
                                   <span class="sub-text">Description</span>
                                 </div>
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Color</span>
                                 </div>
-                                <div class="nk-tb-col">
+                                {/* <div class="nk-tb-col">
                                   <span class="sub-text">Photos</span>
-                                </div>
+                                </div> */}
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Banner</span>
                                 </div>
@@ -172,6 +169,9 @@ export default class ProductsList extends PureComponent {
                                 </div>
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Edit</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Delete</span>
                                 </div>
                               </div>
                               {this.state.products.map((x, i) => (
@@ -257,12 +257,10 @@ export default class ProductsList extends PureComponent {
                         </div>
                         <div class="form-group">
                           <label for="">EMI (true/false)</label>
-                          <input
-                            type="text"
-                            name="emi"
-                            class="form-control"
-                            required
-                          ></input>
+                          <select name="emi" class="form-control" required>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
                         </div>
                         <div class="form-group">
                           <label for="">Type</label>
@@ -271,7 +269,7 @@ export default class ProductsList extends PureComponent {
                             <option value="accessory">Accessory</option>
                           </select>
                         </div>
-                        <div class="form-group">
+                        {/* <div class="form-group">
                           <label for="">Price2</label>
                           <input
                             type="number"
@@ -279,8 +277,8 @@ export default class ProductsList extends PureComponent {
                             class="form-control"
                             required
                           ></input>
-                        </div>
-                        <div class="form-group">
+                        </div> */}
+                        {/* <div class="form-group">
                           <label for="">Features (html)</label>
                           <input
                             type="text"
@@ -288,24 +286,28 @@ export default class ProductsList extends PureComponent {
                             class="form-control"
                             required
                           ></input>
-                        </div>
+                        </div> */}
                         <div class="form-group">
-                          <label for="">Photos</label>
+                          {/* <label for="">Photos</label>
                           <input
                             type="file"
                             name="photos"
                             class="form-control"
                             multiple
                             required
-                          ></input>
-                          <label for="">Brochure</label>
+                          ></input> */}
+                          <label for="">
+                            Brochure (Leave empty to not Update)
+                          </label>
                           <input
                             type="file"
                             name="brochure"
                             class="form-control"
                             required
                           ></input>
-                          <label for="">Banner</label>
+                          <label for="">
+                            Banner (Leave empty to not Update)
+                          </label>
                           <input
                             type="file"
                             name="banner"
@@ -383,25 +385,42 @@ export default class ProductsList extends PureComponent {
                         </div>
                         <div class="form-group">
                           <label for="">EMI (true/false)</label>
-                          <input
+                          {/* <input
                             type="text"
                             name="emi"
                             class="form-control"
                             defaultValue={this.state.editProduct.emi}
                             required
-                          ></input>
+                          ></input> */}
+                          <select
+                            name="emi"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.emi}
+                            required
+                          >
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
                         </div>
                         <div class="form-group">
                           <label for="">Type (product/accessory)</label>
-                          <input
+                          {/* <input
                             type="text"
+                            name="type"
+                            class="form-control"
+                            required
+                          ></input> */}
+                          <select
                             name="type"
                             class="form-control"
                             defaultValue={this.state.editProduct.type}
                             required
-                          ></input>
+                          >
+                            <option value="product">Product</option>
+                            <option value="accessory">Accessory</option>
+                          </select>
                         </div>
-                        <div class="form-group">
+                        {/* <div class="form-group">
                           <label for="">Price2</label>
                           <input
                             type="number"
@@ -410,8 +429,8 @@ export default class ProductsList extends PureComponent {
                             defaultValue={this.state.editProduct.price2}
                             required
                           ></input>
-                        </div>
-                        <div class="form-group">
+                        </div> */}
+                        {/* <div class="form-group">
                           <label for="">Features (html)</label>
                           <input
                             type="text"
@@ -420,16 +439,16 @@ export default class ProductsList extends PureComponent {
                             defaultValue={this.state.editProduct.features}
                             required
                           ></input>
-                        </div>
+                        </div> */}
                         <div class="form-group">
-                          <label for="">Photos</label>
+                          {/* <label for="">Photos</label>
                           <input
                             type="file"
                             name="photos"
                             class="form-control"
                             multiple
                             required
-                          ></input>
+                          ></input> */}
                           <label for="">Brochure</label>
                           <input
                             type="file"
