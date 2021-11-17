@@ -84,21 +84,56 @@ export default class FormsList extends PureComponent {
       });
   };
 
-  downloadAll = () => {
-    let headers = Object.keys(this.state.customers[0]);
-    let listts = this.state.customers.reduce(
-      (t, e) => [...t, Object.values(e)],
-      []
-    );
-    let emails =
-      "data:text/csv;charset=utf-8," + headers + "\n" + listts.join("\n");
-    console.log(emails);
-    var encodedUri = encodeURI(emails);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", this.state.type + ".csv");
-    document.body.appendChild(link);
-    link.click();
+  downloadAll = async () => {
+    const params = {
+      search: this.state.search,
+      sortBy: this.state.sortBy,
+      sortOrder: this.state.sortOrder,
+      records: "all",
+    };
+    let url = "";
+    if (this.state.type === "contact") {
+      url = "/api/contact/read";
+    } else if (this.state.type === "ride") {
+      url = "/api/ride/read";
+    } else if (this.state.type === "emi") {
+      url = "/api/emi/contact/read";
+    } else if (this.state.type === "warranty") {
+      url = "/api/warranty/read";
+    } else if (this.state.type === "community") {
+      url = "/api/community/read";
+    } else if (this.state.type === "partner") {
+      url = "/api/partner/read";
+    } else if (this.state.type === "rsa") {
+      url = "/api/rsa/read";
+      params.type = "rsa";
+    } else if (this.state.type === "insurance") {
+      url = "/api/rsa/read";
+      params.type = "insurance";
+    }
+    await axios
+      .post(server + url, params, config)
+      .then((rsp) => {
+        console.log(rsp);
+        let headers = Object.keys(rsp.data.payload[0]);
+        let listts = rsp.data.payload.reduce(
+          (t, e) => [...t, Object.values(e)],
+          []
+        );
+        let emails =
+          "data:text/csv;charset=utf-8," + headers + "\n" + listts.join("\n");
+        console.log(emails);
+        var encodedUri = encodeURI(emails);
+        var link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", this.state.type + ".csv");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((err) => {
+        checkAccess(err);
+        console.error(err);
+      });
   };
 
   render() {
