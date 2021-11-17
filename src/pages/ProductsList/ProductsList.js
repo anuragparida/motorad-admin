@@ -5,6 +5,7 @@ import Header from "./../../components/Header/Header";
 import Sidebar from "./../../components/Sidebar";
 import axios from "axios";
 import { server, config, checkAccess, formDataConfig } from "../../env";
+const Cookies = require("js-cookie");
 
 export default class ProductsList extends PureComponent {
   state = {
@@ -63,25 +64,36 @@ export default class ProductsList extends PureComponent {
   editProduct = async (e) => {
     e.preventDefault();
 
-    var params = Array.from(e.target.elements)
-      .filter((el) => el.name)
-      .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
-
     let formData = new FormData();
 
-    for (const [key, value] of Object.entries(params)) {
-      formData.append(key, value);
+    formData.append("name", e.target.name.value);
+    formData.append("price", e.target.price.value);
+    formData.append("description", e.target.description.value);
+    formData.append("color", e.target.color.value);
+    formData.append("emi", e.target.emi.value);
+    formData.append("type", e.target.type.value);
+
+    if (e.target.brochure.files.length > 0) {
+      formData.append("brochure", e.target.brochure.files[0]);
+    } else {
+      formData.append("brochure", null);
+    }
+    if (e.target.banner.files.length > 0) {
+      console.log(e.target.banner.files[0]);
+      formData.append("banner", e.target.banner.files[0]);
+    } else {
+      formData.append("banner", null);
     }
 
     axios
-      .put(
-        server + `/api/product/update/${this.state.editId}`,
-        formData,
-        formDataConfig
-      )
+      .put(server + `/api/product/update/${this.state.editId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      })
       .then((rsp) => {
         console.log(rsp);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((err) => {
         console.log(err.response);
@@ -303,7 +315,6 @@ export default class ProductsList extends PureComponent {
                             type="file"
                             name="brochure"
                             class="form-control"
-                            required
                           ></input>
                           <label for="">
                             Banner (Leave empty to not Update)
@@ -312,7 +323,6 @@ export default class ProductsList extends PureComponent {
                             type="file"
                             name="banner"
                             class="form-control"
-                            required
                           ></input>
                         </div>
                       </div>
@@ -454,14 +464,12 @@ export default class ProductsList extends PureComponent {
                             type="file"
                             name="brochure"
                             class="form-control"
-                            required
                           ></input>
                           <label for="">Banner</label>
                           <input
                             type="file"
                             name="banner"
                             class="form-control"
-                            required
                           ></input>
                         </div>
                       </div>

@@ -27,7 +27,7 @@ const ProductsListItem = (props) => {
         </div>
       </div>
       <div class="nk-tb-col">{data.price}</div>
-      <div class="nk-tb-col">{data.price2}</div>
+      {/* <div class="nk-tb-col">{data.price2}</div> */}
       <div class="nk-tb-col">{data.description}</div>
       <div class="nk-tb-col">{data.color}</div>
       {/* <div class="nk-tb-col">
