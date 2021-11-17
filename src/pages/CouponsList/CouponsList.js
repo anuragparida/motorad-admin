@@ -59,28 +59,29 @@ export default class CouponsList extends PureComponent {
       .filter((el) => el.name)
       .reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
 
-    params.user = JSON.parse(params.user);
+    // params.user = JSON.parse(params.user);
     params.product = this.state.prodList;
     params.accessories = this.state.accList;
-    params.user = "all"
+    params.user = "all";
 
-    // axios
-    //   .post(server + `/api/coupon/create`, params, config)
-    //   .then((rsp) => {
-    //     console.log(rsp);
-    //     // window.location.reload();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.response);
-    //     if (err.response) {
-    //     }
-    //   });
+    axios
+      .post(server + `/api/coupon/create`, params, config)
+      .then((rsp) => {
+        console.log(rsp);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err.response);
+        if (err.response) {
+        }
+      });
   };
 
   getProductsArray = (coupon, type) => {
     let localArray = [];
     if (type === "p") {
       if (coupon.product === "all") return "all";
+      // else return coupon.product;
       coupon.product.forEach((prod) => {
         localArray.push(
           this.state.products.filter((x) => x.id === prod).map((x) => x.name)

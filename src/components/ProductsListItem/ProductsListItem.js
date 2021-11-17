@@ -27,10 +27,10 @@ const ProductsListItem = (props) => {
         </div>
       </div>
       <div class="nk-tb-col">{data.price}</div>
-      <div class="nk-tb-col">{data.price2}</div>
+      {/* <div class="nk-tb-col">{data.price2}</div> */}
       <div class="nk-tb-col">{data.description}</div>
       <div class="nk-tb-col">{data.color}</div>
-      <div class="nk-tb-col">
+      {/* <div class="nk-tb-col">
         {data.photos.map((x) => (
           <img
             src={"https://api.emotorad.in" + x}
@@ -38,7 +38,7 @@ const ProductsListItem = (props) => {
             width="auto"
           />
         ))}
-      </div>
+      </div> */}
       <div class="nk-tb-col">
         <img src={"https://api.emotorad.in" + data.banner} class="img-fluid" />
       </div>
