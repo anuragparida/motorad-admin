@@ -90,7 +90,7 @@ export default class OrdersList extends PureComponent {
       .then((rsp) => {
         console.log(rsp);
         let link = document.createElement("a");
-        link.href = "https://api.emotorad.in" + rsp.data.payload;
+        link.href = server + rsp.data.payload;
         link.setAttribute("target", "_blank");
         document.body.appendChild(link);
         link.click();
