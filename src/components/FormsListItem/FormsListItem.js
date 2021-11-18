@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { server } from "../../env";
 
 const FormsListItem = (props) => {
   const data = props.data;
@@ -10,7 +11,7 @@ const FormsListItem = (props) => {
         key === "invoice" ? (
           <div class="nk-tb-col">
             <a
-              href={"https://api.emotorad.in" + data[key]}
+              href={server + data[key]}
               class="btn btn-warning"
               target="_blank"
             >

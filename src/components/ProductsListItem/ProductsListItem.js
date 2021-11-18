@@ -33,14 +33,14 @@ const ProductsListItem = (props) => {
       {/* <div class="nk-tb-col">
         {data.photos.map((x) => (
           <img
-            src={"https://api.emotorad.in" + x}
+            src={server + x}
             height="100px"
             width="auto"
           />
         ))}
       </div> */}
       <div class="nk-tb-col">
-        <img src={"https://api.emotorad.in" + data.banner} class="img-fluid" />
+        <img src={server + data.banner} class="img-fluid" />
       </div>
       <div class="nk-tb-col">{data.brochure}</div>
       <div class="nk-tb-col">{data.type}</div>
