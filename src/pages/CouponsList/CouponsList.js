@@ -315,10 +315,13 @@ export default class CouponsList extends PureComponent {
                                   <span class="sub-text">Code</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Amount Left</span>
+                                  <span class="sub-text">Total Amount</span>
                                 </div>
                                 <div class="nk-tb-col">
-                                  <span class="sub-text">Total Amount</span>
+                                  <span class="sub-text">Amount Used</span>
+                                </div>
+                                <div class="nk-tb-col">
+                                  <span class="sub-text">Amount Left</span>
                                 </div>
                                 <div class="nk-tb-col">
                                   <span class="sub-text">Discount</span>
