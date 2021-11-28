@@ -23,8 +23,9 @@ const CouponsListItem = (props) => {
   return (
     <div class="nk-tb-item">
       <div class="nk-tb-col">{data.code}</div>
-      <div class="nk-tb-col">{data.amount_left}</div>
       <div class="nk-tb-col">{data.total_amount}</div>
+      <div class="nk-tb-col">{data.total_amount - data.amount_left}</div>
+      <div class="nk-tb-col">{data.amount_left}</div>
       <div class="nk-tb-col">{data.discount}</div>
       <div class="nk-tb-col">{data.discount_type}</div>
       {/* <div class="nk-tb-col">{JSON.stringify(data.user)}</div> */}
