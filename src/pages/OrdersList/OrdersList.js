@@ -249,6 +249,31 @@ export default class OrdersList extends PureComponent {
                                               Sort: Product Name
                                             </a>
                                           </li>
+                                          <li>
+                                            <a
+                                              href="#"
+                                              class={
+                                                this.state.sortBy === "status"
+                                                  ? this.state.sortOrder ===
+                                                    "asc"
+                                                    ? "btn btn-success"
+                                                    : "btn btn-warning"
+                                                  : "btn btn-secondary"
+                                              }
+                                              onClick={() => {
+                                                this.setState({
+                                                  sortBy: "status",
+                                                  sortOrder:
+                                                    this.state.sortOrder ===
+                                                    "desc"
+                                                      ? "asc"
+                                                      : "desc",
+                                                });
+                                              }}
+                                            >
+                                              Sort: Paid
+                                            </a>
+                                          </li>
                                         </ul>
                                       </div>
                                     </div>
