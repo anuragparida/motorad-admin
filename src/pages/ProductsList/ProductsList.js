@@ -108,7 +108,7 @@ export default class ProductsList extends PureComponent {
       })
       .then((rsp) => {
         console.log(rsp);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err.response);
