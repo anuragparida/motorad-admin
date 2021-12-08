@@ -120,10 +120,12 @@ export default class FormsList extends PureComponent {
           (t, e) => [...t, Object.values(e)],
           []
         );
-        let emails =
-          "data:text/csv;charset=utf-8," + headers + "\n" + listts.join("\n");
+        console.log(listts);
+        let emails = headers + "\n" + listts.join("\n");
         console.log(emails);
-        var encodedUri = encodeURI(emails);
+        var csvData = new Blob([emails], { type: "text/csv" }); //new way
+        var encodedUri = URL.createObjectURL(csvData);
+        // var encodedUri = "data:text/csv;charset=utf-8" + encodeURI(emails);
         var link = document.createElement("a");
         link.setAttribute("href", encodedUri);
         link.setAttribute("download", this.state.type + ".csv");

@@ -10,7 +10,8 @@
 
 
 ssh.bat
-gits.bat
+gitCherry.bat
+gitBuildPush.bat
 
 # misc
 .DS_Store
