@@ -44,6 +44,7 @@ const ProductsListItem = (props) => {
       </div>
       <div class="nk-tb-col">{data.brochure}</div>
       <div class="nk-tb-col">{data.type}</div>
+      <div class="nk-tb-col">{data.stock}</div>
       <div class="nk-tb-col">
         <a
           href="javascript:void(0)"
