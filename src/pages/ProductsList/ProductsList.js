@@ -195,6 +195,9 @@ export default class ProductsList extends PureComponent {
                                   <span class="sub-text">Type</span>
                                 </div>
                                 <div class="nk-tb-col">
+                                  <span class="sub-text">In Stock</span>
+                                </div>
+                                <div class="nk-tb-col">
                                   <span class="sub-text">Edit</span>
                                 </div>
                                 <div class="nk-tb-col">
@@ -281,6 +284,13 @@ export default class ProductsList extends PureComponent {
                             class="form-control"
                             required
                           ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">In Stock</label>
+                          <select name="stock" class="form-control" required>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
                         </div>
                         <div class="form-group">
                           <label for="">EMI (true/false)</label>
@@ -407,6 +417,18 @@ export default class ProductsList extends PureComponent {
                             defaultValue={this.state.editProduct.color}
                             required
                           ></input>
+                        </div>
+                        <div class="form-group">
+                          <label for="">In Stock</label>
+                          <select
+                            name="stock"
+                            class="form-control"
+                            defaultValue={this.state.editProduct.stock}
+                            required
+                          >
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
                         </div>
                         <div class="form-group">
                           <label for="">EMI (true/false)</label>
