@@ -14,10 +14,10 @@ const OrdersListItem = (props) => {
       <div class="nk-tb-col">{data.discount || "None"}</div>
       <div class="nk-tb-col">{data.coupon_type || "None"}</div>
       <div class="nk-tb-col">
-        {data.address.address +
-          data.address.city +
-          data.address.state +
-          data.address.pin}
+        {`${data.user.name} (${data.user.phone}) - ${data.user.email}`}
+      </div>
+      <div class="nk-tb-col">
+        {`${data.address.name} (${data.address.phone}) - ${data.address.address},${data.address.city},${data.address.state},${data.address.pin}`}
       </div>
       <div class="nk-tb-col">{data.tracking}</div>
       <div class="nk-tb-col">{data.career}</div>
