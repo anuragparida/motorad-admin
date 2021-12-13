@@ -331,6 +331,9 @@ export default class OrdersList extends PureComponent {
                                   <span class="sub-text">Coupon Type</span>
                                 </div>
                                 <div class="nk-tb-col">
+                                  <span class="sub-text">User</span>
+                                </div>
+                                <div class="nk-tb-col">
                                   <span class="sub-text">Address</span>
                                 </div>
                                 <div class="nk-tb-col">
