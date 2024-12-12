@@ -4,8 +4,8 @@ module.exports = {
   server: "https://api.emotorad.in", //ONLY CHANGE THIS
   // server: "http://localhost:7400",
 
-  SITE_KEY: "6LdaGssUAAAAAFMBwO3VPUNlV6pZE_uIY04zK8dh",
-  // SITE_KEY: "6LeujOcUAAAAAE9w5ZajotAUJR6xbaCxj2fu1q59",
+  SITE_KEY: "",
+  // SITE_KEY: "",
 
   config: {
     headers: {
